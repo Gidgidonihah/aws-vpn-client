@@ -1,4 +1,5 @@
 class OpenvpnAws < Formula
+
   desc "SSL/TLS VPN implementing OSI layer 2 or 3 secure network extension"
   homepage "https://openvpn.net/community/"
   url "https://swupdate.openvpn.org/community/releases/openvpn-2.5.1.tar.xz"
@@ -12,7 +13,7 @@ class OpenvpnAws < Formula
   end
 
 patch do
-  url "https://raw.githubusercontent.com/samm-git/aws-vpn-client/master/openvpn-v2.5.1-aws.patch"
+  url "https://raw.githubusercontent.com/samm-git/aws-vpn-client/e726ae6017fef87703069c74fc1c750240814af4/openvpn-v2.5.1-aws.patch"
   sha256 "21834d6dcc6e1ebc79426db9754a7f3f179d9eaa2ff04f27f5041d8a1dc23c1a"
 end
 
@@ -33,13 +34,14 @@ end
                           "--disable-dependency-tracking",
                           "--disable-silent-rules",
                           "--with-crypto-library=openssl",
-                          "--enable-pkcs11",
+                          # "--enable-pkcs11", # Disable to get working. See https://github.com/samm-git/aws-vpn-client/issues/7#issuecomment-1741534919
                           "--prefix=#{prefix}"
     inreplace "sample/sample-plugins/Makefile" do |s|
       s.gsub! HOMEBREW_LIBRARY/"Homebrew/shims/mac/super/pkg-config",
               Formula["pkg-config"].opt_bin/"pkg-config"
-      s.gsub! HOMEBREW_LIBRARY/"Homebrew/shims/mac/super/sed",
-              "/usr/bin/sed"
+      # Disabled to get functional. See https://github.com/samm-git/aws-vpn-client/issues/7#issue-866856655
+      # s.gsub! HOMEBREW_LIBRARY/"Homebrew/shims/mac/super/sed",
+      #         "/usr/bin/sed"
     end
     system "make", "install"
 
@@ -50,15 +52,17 @@ end
     (etc/"openvpn").install doc/"samples/sample-config-files/client.conf"
     (etc/"openvpn").install doc/"samples/sample-config-files/server.conf"
 
+    # Disabled to get functional. See https://github.com/samm-git/aws-vpn-client/issues/7#issue-866856655
     # We don't use mbedtls, so this file is unnecessary & somewhat confusing.
-    rm doc/"README.mbedtls"
+    # rm doc/"README.mbedtls"
   end
 
   def post_install
     (var/"run/openvpn").mkpath
   end
 
-  plist_options startup: true
+  # Option deprecated, nor is it required
+  # plist_options startup: true
 
   def plist
     <<~EOS

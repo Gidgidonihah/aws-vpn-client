@@ -1,37 +1,73 @@
-# aws-vpn-client
+# Mac AWS CLI VPN Client
 
-This is PoC to connect to the AWS Client VPN with OSS OpenVPN using SAML
-authentication. Tested on macOS and Linux, should also work on other POSIX OS with a minor changes.
+An alternate MacOS VPN Client for AWS.
 
-See [my blog post](https://smallhacks.wordpress.com/2020/07/08/aws-client-vpn-internals/) for the implementation details.
+## Usage
 
-P.S. Recently [AWS released Linux desktop client](https://aws.amazon.com/about-aws/whats-new/2021/06/aws-client-vpn-launches-desktop-client-for-linux/), however, it is currently available only for Ubuntu, using Mono and is closed source. 
+1. [Install](#installation) a patched version of OpenVPN
+2. Place your AWS VPN configuration in `./configs`
+3. Pass the name of your conf to the client script.
 
-## Content of the repository
+Assuming you have a VPN config saved at `./configs/staging.conf`, run the following:
 
-- [openvpn-v2.4.9-aws.patch](openvpn-v2.4.9-aws.patch) - patch required to build
-AWS compatible OpenVPN v2.4.9, based on the
-[AWS source code](https://amazon-source-code-downloads.s3.amazonaws.com/aws/clientvpn/osx-v1.2.5/openvpn-2.4.5-aws-2.tar.gz) (thanks to @heprotecbuthealsoattac) for the link.
-- [server.go](server.go) - Go server to listed on http://127.0.0.1:35001 and save
-SAML Post data to the file
-- [aws-connect.sh](aws-connect.sh) - bash wrapper to run OpenVPN. It runs OpenVPN first time to get SAML Redirect and open browser and second time with actual SAML response
+```sh
+aws-connect.sh staging
+```
 
-## How to use
+## Caution
 
-1. Build patched openvpn version and put it to the folder with a script
-1. Start HTTP server with `go run server.go`
-1. Set VPN_HOST in the [aws-connect.sh](aws-connect.sh)
-1. Replace CA section in the sample [vpn.conf](vpn.conf) with one from your AWS configuration
-1. Finally run `aws-connect.sh` to connect to the AWS.
+This project is based on a proof of concept and requires a patched version of OpenVPN.
 
-### Additional Steps
+Currently the **latest supported version is 2.5.1**. Patches for newer versions could be
+created easily enough. But I don't want to deal with the maintenance headache of that,
+so if you want that, clone the repo, create the patch, modify the brew formula and build
+it yourself.
 
-Inspect your ovpn config and remove the following lines if present
-- `auth-user-pass` (we dont want to show user prompt)
-- `auth-federate` (propietary AWS keyword)
-- `auth-retry interact` (do not retry on failures)
-- `remote` and `remote-random-hostname` (already handled in CLI and can cause conflicts with it)
+Obviously, there are downsides to this. Proceed with an appropriate level of caution.
 
-## Todo
+## Installation
 
-Better integrate SAML HTTP server with a script or rewrite everything on golang
+Using this client requires a patched version of OpenVPN. It is up to you to ensure that
+exists. Conveniently, this also comes with a Homebrew formula to build a patched
+version.
+
+> [Caution]: This *will* conflict with an already-installed version of OpenVPN. Proceed at
+> your own risk!
+
+```sh
+brew install --formula openvpn-aws.rb
+```
+
+By default, that will link `openvpn` to the built `openvpn-aws` executable. You can
+unlink it, then link a non-patched version for general usage. You will then need to pass
+the path to the patched version into the client script.
+
+## Motivation
+
+The first-party [AWS VPN Client](https://aws.amazon.com/vpn/client-vpn-download/) sucks.
+Primarily for me this is because it:
+
+1. Doesn't natively support Apple Silicon
+2. Only allows connection to a single VPN at a time
+3. Has a janky, always-open (no menu bar) UI.
+4. Leave it connected, and you'll come back to your computer with a bunch of open tabs.
+
+So I went out on a quest to find a different client. Turns out, the AWS client uses
+proprietary changes to OpenVPN that are baked into their client. Viscosity [doesn't want
+to incorporate them][viscosity-says-no] (which seems reasonable).
+
+Thankfully, Alex Samorukov had reverse-engineered their changes. And [put together a
+PoC](https://github.com/samm-git/aws-vpn-client).
+
+Everything I needed was there.
+
+## TODO
+
+Wouldn't it be nice if I did the following?
+
+- Support newer versions of OpenVPN
+- Wrap it in a menu bar utility
+
+---
+
+[viscosity-says-no]: https://www.sparklabs.com/forum/viewtopic.php?t=3144#p10090
