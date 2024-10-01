@@ -3,6 +3,7 @@
 set -e
 
 
+BASE_DIR=$(dirname $(readlink -f $0))
 SCRIPT_NAME=$(basename "$0")
 HELP=$(cat <<EOF
 Usage: $SCRIPT_NAME [-x EXECUTABLE] [-c config] config
@@ -12,9 +13,13 @@ Connect to an AWS VPN.
 Options:
   -h    Print this help message
   -x    Path to patched OpenVPN executable
-  -c    Config name. Matching .conf file must be found in ./config.
-          May also be supplied positionally, but will not be used if both are supplied.
+  -c    Path to config file.
   -a    Ensure that AWS CLI is authenticated via sso
+
+Arguments:
+  config_name - When optionally supplying a config name, a file by the name *must* be
+      found in ./configs/{name}.conf in this same repo. If supplied via -c, this
+      argument is ignored.
 
 Example(s):
    $SCRIPT_NAME -x /usr/local/bin/openvpn-patched stag
@@ -43,23 +48,23 @@ done
 shift $((OPTIND-1))
 
 # Ensure we have a config supplied
-CONFIG_NAME=${CONFIG_NAME:=$1}
-if [ -z "$CONFIG_NAME" ]; then
+CONFIG_NAME=${CONFIG_NAME:=$BASE_DIR/configs/$1.conf}
+if [[ "$CONFIG_NAME" = "$BASE_DIR/configs/.conf" || "${CONFIG_NAME//[[:space:]]/}" = "" ]]; then
   echo "$HELP" 1>&2;
   echo
   echo "Error: A config name is required." >&2
   exit 1
 fi
 
-# Ensure we have an executable. Assume openvpn is patched if not supplied.
-OVPN_BIN=${OVPN_BIN:="openvpn"}
-
 # Ensure we have a config file
-OVPN_CONF="configs/$CONFIG_NAME.conf"
+OVPN_CONF=$CONFIG_NAME
 if [[ ! -f "$OVPN_CONF" ]]; then
-  echo "Error: Configuration file $OVPN_CONF not found."
+  echo "Error: Configuration file '$OVPN_CONF' not found."
   exit 1
 fi
+
+# Ensure we have an executable. Assume openvpn is patched if not supplied.
+OVPN_BIN=${OVPN_BIN:="openvpn"}
 
 # Get the VPN hostname/port/protocol
 VPN_HOST=$(cat $OVPN_CONF | grep 'remote ' | cut -d ' ' -f2)
@@ -96,7 +101,7 @@ grep -Ev $STRIPPED_LINES "$OVPN_CONF" > "$TMP_CONF"
 
 
 # Start the go server to handle capturing the SAML response
-./aws-saml-response-server > /dev/null 2>&1 &
+$BASE_DIR/aws-saml-response-server &#> /dev/null 2>&1 &
 SERVER_PID=$!
 echo "Go server process started with PID $SERVER_PID"
 quit_server() {
