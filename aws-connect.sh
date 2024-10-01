@@ -101,7 +101,7 @@ SERVER_PID=$!
 echo "Go server process started with PID $SERVER_PID"
 quit_server() {
     # Kill the Go process
-    kill $SERVER_PID
+    kill $SERVER_PID || echo "Go process with PID $SERVER_PID not found"
     echo "Go process with PID $SERVER_PID has been killed"
 }
 
