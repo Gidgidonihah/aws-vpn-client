@@ -91,6 +91,8 @@ Wouldn't it be nice if I did the following?
 - Support newer versions of OpenVPN
 - Wrap this up in a single rust executable, rather than bash + go + tempfiles, etc
   * Even better: Wrap it in a menu bar utility
+- Incorporate some suggested improvements to the original repo
+  * https://github.com/samm-git/aws-vpn-client/issues/17
 
 ---
 
