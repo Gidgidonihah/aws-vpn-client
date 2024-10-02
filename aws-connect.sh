@@ -63,6 +63,10 @@ if [[ ! -f "$OVPN_CONF" ]]; then
   exit 1
 fi
 
+# Ask for the administrator password upfront
+echo "The VPN must be run with administrator privileges."
+sudo -v
+
 # Ensure we have an executable. Assume openvpn is patched if not supplied.
 OVPN_BIN=${OVPN_BIN:="openvpn"}
 
