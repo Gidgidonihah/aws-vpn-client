@@ -78,7 +78,8 @@ PROTOCOL=$(cat $OVPN_CONF | grep 'proto ' | cut -d ' ' -f2)
 # Make sure we clean everything up upon exit
 cleanup() {
     echo "Cleaning up..."
-    rm -f saml-response.txt
+    quit_server
+    rm -f "$BASE_DIR/saml-response.txt"
     rm -f "$TMP_CONF"
 }
 trap cleanup EXIT
@@ -105,12 +106,12 @@ grep -Ev $STRIPPED_LINES "$OVPN_CONF" > "$TMP_CONF"
 
 
 # Start the go server to handle capturing the SAML response
-$BASE_DIR/aws-saml-response-server &#> /dev/null 2>&1 &
+(cd "$BASE_DIR" && exec ./aws-saml-response-server) &
 SERVER_PID=$!
 echo "Go server process started with PID $SERVER_PID"
 quit_server() {
-    # Kill the Go process
-    kill $SERVER_PID || echo "Go process with PID $SERVER_PID not found"
+    [[ -z "${SERVER_PID:-}" ]] && return 0
+    kill $SERVER_PID 2>/dev/null || echo "Go process with PID $SERVER_PID not found"
     echo "Go process with PID $SERVER_PID has been killed"
 }
 
@@ -160,7 +161,7 @@ OVPN_OUT=$($OVPN_BIN --config "${TMP_CONF}" --verb 3 \
 open_url $(echo "$OVPN_OUT" | grep -Eo 'https://.+')
 
 # Wait for the saml-response file to show up, saved from the go server
-wait_file "saml-response.txt" 30 || {
+wait_file "$BASE_DIR/saml-response.txt" 30 || {
   quit_server
   echo "SAML Authentication time out"
   exit 1
@@ -178,5 +179,5 @@ sudo bash -c "$OVPN_BIN --config "${TMP_CONF}" \
     --verb 3 --auth-nocache --inactive 3600 \
     --proto "$PROTOCOL" --remote $SRV $PORT \
     --script-security 2 \
-    --route-up '/usr/bin/env rm saml-response.txt' \
-    --auth-user-pass <( printf \"%s\n%s\n\" \"N/A\" \"CRV1::${VPN_SID}::$(cat saml-response.txt)\" )"
+    --route-up '/usr/bin/env rm $BASE_DIR/saml-response.txt' \
+    --auth-user-pass <( printf \"%s\n%s\n\" \"N/A\" \"CRV1::${VPN_SID}::$(cat "$BASE_DIR/saml-response.txt")\" )"
