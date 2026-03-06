@@ -35,7 +35,7 @@ openvpn. If not, you can pass the path to the executable via the `-x` flag.
 
 This project is based on a proof of concept and requires a patched version of OpenVPN.
 
-Currently the **latest supported version is 2.5.1**. Patches for newer versions could be
+Currently the **latest supported version is 2.6.19**. Patches for newer versions could be
 created easily enough. But I don't want to deal with the maintenance headache of that,
 so if you want that, clone the repo, create the patch, modify the brew formula and build
 it yourself.
@@ -52,7 +52,8 @@ version.
 > your own risk!
 
 ```sh
-brew install --formula openvpn-aws.rb
+brew tap awsvpn/aws-vpn-client /path/to/this/repo
+brew install awsvpn/aws-vpn-client/openvpn-aws
 ```
 
 By default, that will link `openvpn` to the built `openvpn-aws` executable. You can
@@ -62,7 +63,7 @@ the path to the patched version into the client script via the `-x` flag.
 You will also need `go` and  `openssl` installed. Typically this is done by running:
 
 ```sh
-brew install go openssl
+brew install go openssl@3
 ```
 
 ## Motivation
