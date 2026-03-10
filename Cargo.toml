@@ -1,0 +1,3 @@
+[workspace]
+members = ["aws-vpn-core", "aws-vpn-cli"]
+resolver = "2"
