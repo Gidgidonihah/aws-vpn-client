@@ -41,7 +41,7 @@ VPN connections run silently in the background — connect once from the menu ba
 - Signing / notarization — not needed for personal use
 - Preferences window — no settings UI, config is file-based
 - Auto-update mechanism — manual builds only
-- Non-macOS platforms — macOS 13+ (Ventura) only, required for MenuBarExtra
+- Non-macOS platforms — macOS 14+ (Sonoma) only, required for @Observable
 - Keeping Rust workspace long-term — legacy code deleted after Swift version verified
 
 ## Context
@@ -57,7 +57,7 @@ Existing authentication logic to preserve exactly:
 ## Constraints
 
 - **Tech stack**: Swift + SwiftUI + Network.framework — full rewrite, no Rust dependency
-- **Min macOS**: 13.0 (Ventura) — required for `MenuBarExtra` scene
+- **Min macOS**: 14.0 (Sonoma) — required for `@Observable` macro (bumped from 13; personal tool, no real audience cost)
 - **Privileges**: `sudo openvpn` requires NOPASSWD sudoers entry — documented in README, must be set up by user
 - **IPC**: Unix domain socket at `~/Library/Application Support/AWSVPNClient/daemon.sock`
 - **No code signing**: Personal-use tool, unsigned builds only
@@ -67,7 +67,7 @@ Existing authentication logic to preserve exactly:
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
 | Swift full rewrite (no Rust) | Native macOS APIs, no terminal required, proper background process lifecycle | — Pending |
-| SwiftUI MenuBarExtra | Native menu bar integration, macOS 13+ only | — Pending |
+| SwiftUI MenuBarExtra | Native menu bar integration, macOS 14+ only | — Pending |
 | Unix domain socket for IPC | Simple, reliable, no network stack needed for local CLI→app communication | — Pending |
 | NWListener for SAML server | Network.framework is the modern macOS API; replaces axum/tokio | — Pending |
 | @Observable VPNManager | SwiftUI-native state management pattern (Swift 5.9+) | — Pending |
@@ -76,4 +76,4 @@ Existing authentication logic to preserve exactly:
 | Legacy Rust left in place initially | Delete after Swift version verified working | — Pending |
 
 ---
-*Last updated: 2026-03-17 after initialization*
+*Last updated: 2026-03-17 after research (macOS min bumped 13→14)*
