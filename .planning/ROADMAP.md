@@ -30,10 +30,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. A "Quit" menu item terminates the app cleanly
   4. VPNManager (@Observable @MainActor) skeleton is importable from both app and CLI targets
   5. Config directory at ~/Library/Application Support/AWSVPNClient/configs/ is created on first launch
-**Plans**: 2 plans
+**Plans**: 3 plans
 Plans:
-- [ ] 01-01-PLAN.md — Xcode project creation with three targets, framework embedding, and rpath spike
-- [ ] 01-02-PLAN.md — VPNCore types (VPNConfig, ConnectionState, VPNManager) and MenuBarExtra shell wiring
+- [x] 01-01-PLAN.md — Xcode project creation with three targets, framework embedding, and rpath spike
+- [x] 01-02-PLAN.md — VPNCore types (VPNConfig, ConnectionState, VPNManager) and MenuBarExtra shell wiring
+- [ ] 01-03-PLAN.md — Gap closure: copy aws-connect binary into app bundle via build phase
 
 ### Phase 2: Connection Lifecycle
 **Goal**: A VPN connection can be initiated and terminated end-to-end — SAML auth completes, openvpn runs as a background subprocess, and no orphaned processes or credential files survive
@@ -87,7 +88,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Scaffold | 2/2 | Complete   | 2026-03-19 |
+| 1. Scaffold | 2/3 | Gap closure | - |
 | 2. Connection Lifecycle | 0/TBD | Not started | - |
 | 3. Menu UI + Config Management | 0/TBD | Not started | - |
 | 4. IPC & CLI | 0/TBD | Not started | - |
