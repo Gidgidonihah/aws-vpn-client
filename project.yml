@@ -1,0 +1,62 @@
+name: AWSVPNClient
+options:
+  bundleIdPrefix: com.local
+  deploymentTarget:
+    macOS: "14.0"
+  xcodeVersion: "16.3"
+  defaultConfig: Debug
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+
+targets:
+  VPNCore:
+    type: framework
+    platform: macOS
+    sources:
+      - VPNCore
+    info:
+      path: VPNCore/VPNCore-Info.plist
+      properties:
+        CFBundleIdentifier: com.local.VPNCore
+        CFBundleName: VPNCore
+        CFBundleVersion: "1"
+        CFBundleShortVersionString: "1.0"
+    settings:
+      base:
+        DEFINES_MODULE: YES
+        PRODUCT_NAME: VPNCore
+
+  AWSVPNClient:
+    type: application
+    platform: macOS
+    sources:
+      - AWSVPNClient
+    info:
+      path: AWSVPNClient/AWSVPNClient-Info.plist
+      properties:
+        LSUIElement: true
+        CFBundleName: AWSVPNClient
+    dependencies:
+      - target: VPNCore
+        embed: true
+        codeSign: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.local.AWSVPNClient
+        INFOPLIST_FILE: AWSVPNClient/AWSVPNClient-Info.plist
+
+  aws-connect:
+    type: tool
+    platform: macOS
+    sources:
+      - aws-connect
+    dependencies:
+      - target: VPNCore
+        embed: false
+    settings:
+      base:
+        RUNPATH_SEARCH_PATHS: "@executable_path/../Frameworks"
