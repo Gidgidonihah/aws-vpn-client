@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 01-01-PLAN.md
-last_updated: "2026-03-19T20:48:06.083Z"
+stopped_at: Completed 01-02-PLAN.md
+last_updated: "2026-03-19T21:55:39.142Z"
 last_activity: 2026-03-17 — Roadmap created
 progress:
   total_phases: 5
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
+  completed_plans: 2
   percent: 0
 ---
 
@@ -50,6 +50,7 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 01-scaffold P02 | 30 | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -63,6 +64,9 @@ Recent decisions affecting current work:
 - [Pre-phase]: Foundation.Process for subprocess (not swift-subprocess v0.1)
 - [Phase 01]: Dynamic framework rpath confirmed viable — spike passed, CLI loads VPNCore from @executable_path/../Frameworks, no pivot to SPM needed
 - [Phase 01]: VPNCore-Info.plist required in XcodeGen project.yml info block — codesign rejects embedded framework without it
+- [Phase 01-scaffold]: ConnectionState uses case failed(String) not Error for Swift 6 Sendable conformance
+- [Phase 01-scaffold]: @MainActor on AWSVPNClientApp struct required to resolve Swift 6 @State + @MainActor class init error
+- [Phase 01-scaffold]: Config directory creation inline in VPNManager.init() using try? — idempotent, no separate setup
 
 ### Pending Todos
 
@@ -75,6 +79,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-19T20:48:06.080Z
-Stopped at: Completed 01-01-PLAN.md
+Last session: 2026-03-19T21:55:39.140Z
+Stopped at: Completed 01-02-PLAN.md
 Resume file: None
