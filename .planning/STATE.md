@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Phase 1 context gathered
-last_updated: "2026-03-18T00:02:05.289Z"
+stopped_at: Completed 01-01-PLAN.md
+last_updated: "2026-03-19T20:48:06.083Z"
 last_activity: 2026-03-17 — Roadmap created
 progress:
   total_phases: 5
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 2
+  completed_plans: 1
   percent: 0
 ---
 
@@ -61,6 +61,8 @@ Recent decisions affecting current work:
 - [Pre-phase]: VPNCore as shared framework — resolve rpath vs. static library in Phase 1 spike before committing
 - [Pre-phase]: Swift 6.1 strict concurrency + @Observable (macOS 14+) — no @StateObject, no global singletons
 - [Pre-phase]: Foundation.Process for subprocess (not swift-subprocess v0.1)
+- [Phase 01]: Dynamic framework rpath confirmed viable — spike passed, CLI loads VPNCore from @executable_path/../Frameworks, no pivot to SPM needed
+- [Phase 01]: VPNCore-Info.plist required in XcodeGen project.yml info block — codesign rejects embedded framework without it
 
 ### Pending Todos
 
@@ -73,6 +75,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T00:02:05.287Z
-Stopped at: Phase 1 context gathered
-Resume file: .planning/phases/01-scaffold/01-CONTEXT.md
+Last session: 2026-03-19T20:48:06.080Z
+Stopped at: Completed 01-01-PLAN.md
+Resume file: None

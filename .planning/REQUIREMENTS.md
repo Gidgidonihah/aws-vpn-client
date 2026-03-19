@@ -7,7 +7,7 @@
 
 ### Scaffold
 
-- [ ] **SCAF-01**: Xcode project exists with three targets — App (AWSVPNClient), VPNCore (framework), and CLI (aws-connect)
+- [x] **SCAF-01**: Xcode project exists with three targets — App (AWSVPNClient), VPNCore (framework), and CLI (aws-connect)
 - [ ] **SCAF-02**: App runs as menu bar only — no Dock icon, no main window (LSUIElement = YES in Info.plist)
 
 ### Connection Lifecycle
@@ -76,7 +76,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SCAF-01 | Phase 1 | Pending |
+| SCAF-01 | Phase 1 | Complete |
 | SCAF-02 | Phase 1 | Pending |
 | CONN-01 | Phase 2 | Pending |
 | CONN-02 | Phase 2 | Pending |
