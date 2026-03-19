@@ -1,9 +1,11 @@
-public enum ConnectionState {
+import Foundation
+
+public enum ConnectionState: Sendable {
     case disconnected
     case authenticating
     case connected
     case disconnecting
-    case failed(Error)
+    case failed(String)
 
     public var isConnected: Bool {
         if case .connected = self { return true }

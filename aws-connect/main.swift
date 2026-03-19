@@ -1,4 +1,5 @@
 import Foundation
 import VPNCore
 
-print("aws-connect v\(vpnCoreVersion) — stub (Phase 4)")
+print("aws-connect — stub (Phase 4)")
+print("VPNCore types available: VPNConfig, ConnectionState, VPNManager")

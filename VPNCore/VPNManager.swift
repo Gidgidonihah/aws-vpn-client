@@ -1,5 +1,5 @@
-import Observation
 import Foundation
+import Observation
 
 @Observable
 @MainActor
@@ -11,8 +11,17 @@ public final class VPNManager {
         connections.values.contains { $0.isConnected }
     }
 
+    public static let configsDirectory: URL = {
+        FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("AWSVPNClient/configs", isDirectory: true)
+    }()
+
     public init() {
-        try? createConfigDirectoryIfNeeded()
+        try? FileManager.default.createDirectory(
+            at: Self.configsDirectory,
+            withIntermediateDirectories: true,
+            attributes: nil
+        )
     }
 
     public func connect(_ config: VPNConfig) async throws {
@@ -21,20 +30,5 @@ public final class VPNManager {
 
     public func disconnect(_ config: VPNConfig) async throws {
         fatalError("Phase 2")
-    }
-
-    // MARK: - Config Directory
-
-    public static let configsDirectory: URL = {
-        FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("AWSVPNClient/configs", isDirectory: true)
-    }()
-
-    private func createConfigDirectoryIfNeeded() throws {
-        try FileManager.default.createDirectory(
-            at: VPNManager.configsDirectory,
-            withIntermediateDirectories: true,
-            attributes: nil
-        )
     }
 }
