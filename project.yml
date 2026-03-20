@@ -65,3 +65,14 @@ targets:
     settings:
       base:
         RUNPATH_SEARCH_PATHS: "@executable_path/../Frameworks"
+
+  VPNCoreTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - VPNCoreTests
+    dependencies:
+      - target: VPNCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.local.VPNCoreTests
