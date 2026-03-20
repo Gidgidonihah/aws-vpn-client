@@ -13,7 +13,7 @@ Starting from a working Rust CLI, we build a native Swift macOS menu bar app tha
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Scaffold** - Xcode multi-target project with VPNCore framework, menu bar shell, and config persistence (completed 2026-03-19)
-- [ ] **Phase 2: Connection Lifecycle** - SAML auth flow + openvpn subprocess management with all critical pitfall mitigations
+- [x] **Phase 2: Connection Lifecycle** - SAML auth flow + openvpn subprocess management with all critical pitfall mitigations (completed 2026-03-20)
 - [ ] **Phase 3: Menu UI + Config Management** - Full menu UI wired to live state, config add/remove, log viewer
 - [ ] **Phase 4: IPC & CLI** - Unix socket server in app, companion aws-connect CLI with connect/disconnect/status
 - [ ] **Phase 5: Cleanup & Docs** - Delete Rust legacy, update README with Swift setup instructions
@@ -95,7 +95,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Scaffold | 3/3 | Complete   | 2026-03-20 |
-| 2. Connection Lifecycle | 4/5 | In Progress|  |
+| 2. Connection Lifecycle | 5/5 | Complete   | 2026-03-20 |
 | 3. Menu UI + Config Management | 0/TBD | Not started | - |
 | 4. IPC & CLI | 0/TBD | Not started | - |
 | 5. Cleanup & Docs | 0/TBD | Not started | - |
