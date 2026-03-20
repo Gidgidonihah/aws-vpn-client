@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 02-01-PLAN.md
-last_updated: "2026-03-20T18:38:57.209Z"
+stopped_at: Completed 02-03-PLAN.md
+last_updated: "2026-03-20T18:42:10.254Z"
 last_activity: 2026-03-17 — Roadmap created
 progress:
   total_phases: 5
   completed_phases: 1
   total_plans: 8
-  completed_plans: 4
+  completed_plans: 5
   percent: 0
 ---
 
@@ -53,6 +53,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01-scaffold P02 | 30 | 3 tasks | 7 files |
 | Phase 01-scaffold P03 | 5 | 1 tasks | 2 files |
 | Phase 02-connection-lifecycle P01 | 228 | 2 tasks | 10 files |
+| Phase 02-connection-lifecycle P03 | 2 | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -72,6 +73,8 @@ Recent decisions affecting current work:
 - [Phase 01-scaffold]: XcodeGen embed+copy.destination:executables places aws-connect into AWSVPNClient.app/Contents/MacOS/ — primary approach worked, postBuildScript fallback not needed
 - [Phase 02-connection-lifecycle]: --writepid flag confirmed supported by installed openvpn binary — primary PID tracking strategy adopted, pgrep fallback not needed
 - [Phase 02-connection-lifecycle]: Explicit schemes block required in project.yml — XcodeGen does not auto-associate unit test targets with the app scheme
+- [Phase 02-connection-lifecycle]: SAMLServer is final class @unchecked Sendable (not actor) — NWListener GCD callbacks + DispatchQueue-serialized continuation state
+- [Phase 02-connection-lifecycle]: extractSAMLResponse/parseContentLength use internal visibility for @testable import unit test access
 
 ### Pending Todos
 
@@ -84,6 +87,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-20T18:38:57.206Z
-Stopped at: Completed 02-01-PLAN.md
+Last session: 2026-03-20T18:42:10.252Z
+Stopped at: Completed 02-03-PLAN.md
 Resume file: None

@@ -2,43 +2,54 @@ import XCTest
 @testable import VPNCore
 
 final class AuthHelpersTests: XCTestCase {
+
+    // MARK: - randomHex
+
     func testRandomHexProduces24CharStringForByteCount12() {
-        // randomHex(byteCount: 12) must return exactly 24 lowercase hex chars
-        XCTFail("Not implemented -- Wave 1")
+        let hex = randomHex(byteCount: 12)
+        XCTAssertEqual(hex.count, 24, "randomHex(byteCount: 12) must return exactly 24 characters")
     }
 
     func testRandomHexContainsOnlyHexCharacters() {
-        // Output must match regex ^[0-9a-f]+$
-        XCTFail("Not implemented -- Wave 1")
+        let hex = randomHex(byteCount: 12)
+        let allHex = hex.allSatisfy { "0123456789abcdef".contains($0) }
+        XCTAssertTrue(allHex, "randomHex output must contain only lowercase hex characters [0-9a-f]")
     }
 
     func testRandomHexProducesUniqueValues() {
-        // Two calls should produce different strings (probabilistic but safe with 12 bytes)
-        XCTFail("Not implemented -- Wave 1")
+        let hex1 = randomHex(byteCount: 12)
+        let hex2 = randomHex(byteCount: 12)
+        XCTAssertNotEqual(hex1, hex2, "Two randomHex calls should produce different values")
     }
 
+    // MARK: - urlEncodeSAML
+
     func testURLEncodingSAMLResponseEncodesPlus() {
-        // "abc+def" must become "abc%2Bdef" not "abc+def"
-        XCTFail("Not implemented -- Wave 1")
+        let encoded = urlEncodeSAML("abc+def")
+        XCTAssertEqual(encoded, "abc%2Bdef", "'+' must be encoded as '%2B'")
     }
 
     func testURLEncodingSAMLResponseEncodesSpaceAsPercent20() {
-        // "abc def" must become "abc%20def"
-        XCTFail("Not implemented -- Wave 1")
+        let encoded = urlEncodeSAML("abc def")
+        XCTAssertEqual(encoded, "abc%20def", "space must be encoded as '%20'")
     }
 
     func testURLEncodingSAMLResponsePreservesAlphanumeric() {
-        // "abcABC123" must remain unchanged
-        XCTFail("Not implemented -- Wave 1")
+        let encoded = urlEncodeSAML("abcABC123")
+        XCTAssertEqual(encoded, "abcABC123", "alphanumeric characters must not be encoded")
     }
 
+    // MARK: - Credential formatting
+
     func testDummyCredsFormat() {
-        // Line 1: "N/A", Line 2: "ACS::35001"
-        XCTFail("Not implemented -- Wave 1")
+        let creds = dummyCredentials()
+        XCTAssertEqual(creds, "N/A\nACS::35001\n",
+                       "dummyCredentials() must be exactly 'N/A\\nACS::35001\\n'")
     }
 
     func testRealCredsFormat() {
-        // Line 1: "N/A", Line 2: "CRV1::<sid>::<urlEncoded>"
-        XCTFail("Not implemented -- Wave 1")
+        let creds = realCredentials(sid: "abc", urlEncodedSAML: "xyz")
+        XCTAssertEqual(creds, "N/A\nCRV1::abc::xyz\n",
+                       "realCredentials must be exactly 'N/A\\nCRV1::<sid>::<urlEncoded>\\n'")
     }
 }
