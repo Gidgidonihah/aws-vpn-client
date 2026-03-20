@@ -2,49 +2,77 @@ import XCTest
 @testable import VPNCore
 
 final class VPNConfigParsingTests: XCTestCase {
-    func testExtractsHostFromRemoteDirective() {
-        // Input: "remote vpn.example.com 443\nproto udp\n..."
-        // Expected: host == "vpn.example.com"
-        XCTFail("Not implemented -- Wave 1")
+
+    // MARK: - Extraction tests
+
+    func testExtractsHostFromRemoteDirective() throws {
+        let content = "remote vpn.example.com 443\nproto udp\ncipher AES-256-GCM\n"
+        let parsed = try VPNConfigParser.parse(content: content)
+        XCTAssertEqual(parsed.host, "vpn.example.com")
     }
 
-    func testExtractsPortFromRemoteDirective() {
-        // Expected: port == "443"
-        XCTFail("Not implemented -- Wave 1")
+    func testExtractsPortFromRemoteDirective() throws {
+        let content = "remote vpn.example.com 443\nproto udp\ncipher AES-256-GCM\n"
+        let parsed = try VPNConfigParser.parse(content: content)
+        XCTAssertEqual(parsed.port, "443")
     }
 
-    func testExtractsProtoFromProtoDirective() {
-        // Expected: proto == "udp"
-        XCTFail("Not implemented -- Wave 1")
+    func testExtractsProtoFromProtoDirective() throws {
+        let content = "remote vpn.example.com 443\nproto udp\ncipher AES-256-GCM\n"
+        let parsed = try VPNConfigParser.parse(content: content)
+        XCTAssertEqual(parsed.proto, "udp")
     }
 
-    func testStripsAuthUserPassDirective() {
-        // "auth-user-pass" line must not appear in filtered output
-        XCTFail("Not implemented -- Wave 1")
+    // MARK: - Filtering tests
+
+    func testStripsAuthUserPassDirective() throws {
+        let content = "remote vpn.example.com 443\nproto udp\nauth-user-pass /path\ncipher AES-256-GCM\n"
+        let parsed = try VPNConfigParser.parse(content: content)
+        XCTAssertFalse(parsed.filteredContent.contains("auth-user-pass"),
+                       "filteredContent must not contain 'auth-user-pass'")
     }
 
-    func testStripsAuthFederateDirective() {
-        // "auth-federate" line must not appear in filtered output
-        XCTFail("Not implemented -- Wave 1")
+    func testStripsAuthFederateDirective() throws {
+        let content = "remote vpn.example.com 443\nproto udp\nauth-federate\ncipher AES-256-GCM\n"
+        let parsed = try VPNConfigParser.parse(content: content)
+        XCTAssertFalse(parsed.filteredContent.contains("auth-federate"),
+                       "filteredContent must not contain 'auth-federate'")
     }
 
-    func testStripsAuthRetryInteractDirective() {
-        // "auth-retry interact" stripped but "auth-retry none" kept
-        XCTFail("Not implemented -- Wave 1")
+    func testStripsAuthRetryInteractDirective() throws {
+        let content = "remote vpn.example.com 443\nproto udp\nauth-retry interact\nauth-retry none\ncipher AES-256-GCM\n"
+        let parsed = try VPNConfigParser.parse(content: content)
+        XCTAssertFalse(parsed.filteredContent.contains("auth-retry interact"),
+                       "filteredContent must not contain 'auth-retry interact'")
+        XCTAssertTrue(parsed.filteredContent.contains("auth-retry none"),
+                      "filteredContent must keep 'auth-retry none'")
     }
 
-    func testStripsRemoteDirective() {
-        // "remote ..." line stripped from filtered output
-        XCTFail("Not implemented -- Wave 1")
+    func testStripsRemoteDirective() throws {
+        let content = "remote vpn.example.com 443\nproto udp\ncipher AES-256-GCM\n"
+        let parsed = try VPNConfigParser.parse(content: content)
+        XCTAssertFalse(parsed.filteredContent.contains("remote"),
+                       "filteredContent must not contain 'remote'")
     }
 
-    func testKeepsNonStrippedLines() {
-        // Lines like "cipher AES-256-GCM" must survive filtering
-        XCTFail("Not implemented -- Wave 1")
+    func testKeepsNonStrippedLines() throws {
+        let content = "remote vpn.example.com 443\nproto udp\ncipher AES-256-GCM\ndev tun\n"
+        let parsed = try VPNConfigParser.parse(content: content)
+        XCTAssertTrue(parsed.filteredContent.contains("cipher AES-256-GCM"),
+                      "filteredContent must keep 'cipher AES-256-GCM'")
+        XCTAssertTrue(parsed.filteredContent.contains("dev tun"),
+                      "filteredContent must keep 'dev tun'")
     }
+
+    // MARK: - Error tests
 
     func testThrowsOnMissingRemoteDirective() {
-        // Config with no "remote" line should throw VPNError.configParseFailure
-        XCTFail("Not implemented -- Wave 1")
+        let content = "proto udp\ncipher AES-256-GCM\n"
+        XCTAssertThrowsError(try VPNConfigParser.parse(content: content)) { error in
+            guard case VPNError.configParseFailure = error else {
+                XCTFail("Expected VPNError.configParseFailure, got \(error)")
+                return
+            }
+        }
     }
 }
