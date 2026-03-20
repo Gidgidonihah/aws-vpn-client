@@ -16,4 +16,9 @@ public enum ConnectionState: Sendable {
         if case .authenticating = self { return true }
         return false
     }
+
+    public var isDisconnecting: Bool {
+        if case .disconnecting = self { return true }
+        return false
+    }
 }

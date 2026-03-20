@@ -2,6 +2,16 @@ import AppKit
 import Foundation
 import Observation
 
+/// Global PID set for atexit safety net.
+/// Updated from @MainActor, read from atexit (data race is acceptable for crash path).
+public nonisolated(unsafe) var _atexitPIDs: [Int32] = []
+
+/// Called from VPNManager whenever openvpnPIDs changes.
+/// Also called from AWSVPNClientApp to keep atexit PID set current.
+public func _updateAtexitPIDs(_ pids: [Int32]) {
+    _atexitPIDs = pids
+}
+
 @Observable
 @MainActor
 public final class VPNManager {
@@ -181,7 +191,57 @@ public final class VPNManager {
     }
 
     public func disconnect(_ config: VPNConfig) async throws {
-        fatalError("Phase 2")
+        let currentState = connections[config.name]
+
+        // If authenticating, cancel the auth flow (cancel-on-click: no .failed)
+        if case .authenticating = currentState {
+            await cancelAuth(for: config)
+            return
+        }
+
+        // Only disconnect if connected
+        guard case .connected = currentState else { return }
+
+        connections[config.name] = .disconnecting
+
+        // Send SIGTERM to the REAL openvpn PID (not the sudo wrapper) -- Pitfall 1
+        if let pid = openvpnPIDs[config.name] {
+            let killProcess = Process()
+            killProcess.executableURL = URL(fileURLWithPath: "/usr/bin/sudo")
+            killProcess.arguments = ["kill", "-TERM", String(pid)]
+            try? killProcess.run()
+            killProcess.waitUntilExit()  // kill is instant
+        } else if let process = activeProcesses[config.name], process.isRunning {
+            // Fallback: terminate the sudo wrapper (less reliable but better than nothing)
+            process.terminate()
+        }
+
+        // Clean up PID file
+        let pidPath = "/tmp/aws-vpn-\(config.name).pid"
+        try? FileManager.default.removeItem(atPath: pidPath)
+
+        // Clean up tracking
+        activeProcesses.removeValue(forKey: config.name)
+        openvpnPIDs.removeValue(forKey: config.name)
+        _updateAtexitPIDs(Array(openvpnPIDs.values))
+
+        // The terminationHandler will fire and sees .disconnecting -> transitions to .disconnected
+        connections[config.name] = .disconnected
+    }
+
+    /// All currently tracked openvpn PIDs. Used by atexit safety net.
+    /// Must be called from @MainActor context.
+    public var allOpenvpnPIDs: [Int32] {
+        Array(openvpnPIDs.values)
+    }
+
+    /// Synchronous disconnect-all for use in atexit handler.
+    /// Sends SIGTERM directly to all known openvpn PIDs.
+    /// This is NOT @MainActor safe -- acceptable only as a crash-path safety net.
+    public nonisolated func killAllOpenvpnProcesses(pids: [Int32]) {
+        for pid in pids {
+            kill(pid, SIGTERM)
+        }
     }
 
     // MARK: - Private helpers
@@ -309,10 +369,13 @@ public final class VPNManager {
                     scanner.connected = true
                     Task { @MainActor [weak self] in
                         self?.connections[configName] = .connected
-                        // Read PID file after connected
+                        // Read PID file after connected and update atexit safety net
                         if let pidString = try? String(contentsOfFile: pidPath, encoding: .utf8),
                            let pid = Int32(pidString.trimmingCharacters(in: .whitespacesAndNewlines)) {
                             self?.openvpnPIDs[configName] = pid
+                            if let self {
+                                _updateAtexitPIDs(Array(self.openvpnPIDs.values))
+                            }
                         }
                     }
                     scanner.buffer = Data()
@@ -330,19 +393,22 @@ public final class VPNManager {
 
             Task { @MainActor [weak self] in
                 guard let self else { return }
-                // Clean up PID tracking
+                // Clean up PID tracking and keep atexit PID set current
                 self.activeProcesses.removeValue(forKey: configName)
                 self.openvpnPIDs.removeValue(forKey: configName)
+                _updateAtexitPIDs(Array(self.openvpnPIDs.values))
                 try? FileManager.default.removeItem(atPath: pidPath)
 
-                // Only transition to failed if we were connected (unexpected exit)
-                if case .connected = self.connections[configName] {
+                switch self.connections[configName] {
+                case .connected:
                     self.connections[configName] = .failed("openvpn exited unexpectedly")
-                } else if case .authenticating = self.connections[configName] {
-                    // Process exited during auth -- also a failure
+                case .disconnecting:
+                    self.connections[configName] = .disconnected
+                case .authenticating:
                     self.connections[configName] = .failed("openvpn exited during auth")
+                default:
+                    break  // Already handled elsewhere
                 }
-                // If .disconnecting, the disconnect() method handles the transition
             }
         }
 
