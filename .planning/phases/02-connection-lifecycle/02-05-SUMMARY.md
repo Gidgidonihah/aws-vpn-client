@@ -63,7 +63,7 @@ completed: 2026-03-20
 - **Duration:** ~15 min
 - **Started:** 2026-03-20T12:45:00Z
 - **Completed:** 2026-03-20T12:58:00Z
-- **Tasks:** 2 of 2 auto tasks complete (Task 3 is human-verify checkpoint)
+- **Tasks:** 3 of 3 complete (including human-verify checkpoint, approved 2026-03-20)
 - **Files modified:** 5
 
 ## Accomplishments
@@ -81,6 +81,9 @@ Each task was committed atomically:
 1. **Task 1: VPNManager.disconnect() and PID accessor** - `5d3ed02` (feat)
 2. **Task 2: AppDelegate + atexit safety net** - `2cff272` (feat)
 3. **Task 2 deviation: implement Wave 3 placeholder test** - `2d52926` (fix)
+4. **Task 3: Human verification approved** - (checkpoint, no code changes)
+   - Menu bar icon appears, app quits cleanly, no Dock icon confirmed
+   - Config not in menu expected (Phase 3 scope — CONF-04)
 
 ## Files Created/Modified
 

@@ -16,7 +16,7 @@
 - [x] **CONN-02**: SAML authentication flow completes end-to-end: dummy openvpn call → CRV1 line parsed → browser opens → SAML POST received on :35001 → openvpn connected
 - [x] **CONN-03**: Each connection has a state machine: disconnected → authenticating → connected → disconnecting → failed
 - [x] **CONN-04**: Connected openvpn process runs as background subprocess under `sudo openvpn` (NOPASSWD) until explicitly stopped
-- [ ] **CONN-05**: App termination kills all openvpn subprocesses — no orphaned tunnels survive app quit
+- [x] **CONN-05**: App termination kills all openvpn subprocesses — no orphaned tunnels survive app quit
 - [x] **CONN-06**: Credential temp files (dummy creds, SAML creds) are deleted immediately after the subprocess consumes them
 - [x] **CONN-07**: User can disconnect a connected config by clicking it in the menu
 - [x] **CONN-08**: Per-connection stdout+stderr streamed to `~/Library/Logs/AWSVPNClient/<name>.log`
@@ -82,7 +82,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONN-02 | Phase 2 | Complete |
 | CONN-03 | Phase 2 | Complete |
 | CONN-04 | Phase 2 | Complete |
-| CONN-05 | Phase 2 | Pending |
+| CONN-05 | Phase 2 | Complete |
 | CONN-06 | Phase 2 | Complete |
 | CONN-07 | Phase 2 | Complete |
 | CONN-08 | Phase 2 | Complete |

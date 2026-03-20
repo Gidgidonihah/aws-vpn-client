@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: "Completed 02-05-PLAN.md (checkpoint:human-verify pending)"
-last_updated: "2026-03-20T18:57:15.080Z"
+stopped_at: Completed 02-05-PLAN.md
+last_updated: "2026-03-20T21:24:39.342Z"
 last_activity: 2026-03-17 — Roadmap created
 progress:
   total_phases: 5
@@ -57,6 +57,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 02-connection-lifecycle P02 | 3 | 2 tasks | 5 files |
 | Phase 02-connection-lifecycle P04 | 4 | 1 tasks | 4 files |
 | Phase 02-connection-lifecycle P05 | 15 | 3 tasks | 5 files |
+| Phase 02-connection-lifecycle P05 | 15 | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -86,6 +87,7 @@ Recent decisions affecting current work:
 - [Phase 02-connection-lifecycle]: openvpnPath resolved at init via static closure checking /usr/local/bin, /opt/homebrew/bin, /usr/bin before falling back to PATH
 - [Phase 02-connection-lifecycle]: _updateAtexitPIDs defined in VPNCore not app target: VPNCore framework cannot call into embedding app
 - [Phase 02-connection-lifecycle]: atexit PID set uses nonisolated(unsafe) global: data race acceptable on crash-path safety net
+- [Phase 02-connection-lifecycle]: _updateAtexitPIDs defined in VPNCore (not AWSVPNClientApp) because VPNCore framework cannot call into the app target
 
 ### Pending Todos
 
@@ -98,6 +100,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-20T18:57:15.078Z
-Stopped at: Completed 02-05-PLAN.md (checkpoint:human-verify pending)
+Last session: 2026-03-20T21:24:39.335Z
+Stopped at: Completed 02-05-PLAN.md
 Resume file: None
