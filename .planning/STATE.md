@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 01-02-PLAN.md
-last_updated: "2026-03-19T21:55:39.142Z"
+stopped_at: Completed 01-03-PLAN.md
+last_updated: "2026-03-20T00:32:16.015Z"
 last_activity: 2026-03-17 — Roadmap created
 progress:
   total_phases: 5
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 3
+  completed_plans: 3
   percent: 0
 ---
 
@@ -51,6 +51,7 @@ Progress: [░░░░░░░░░░] 0%
 
 *Updated after each plan completion*
 | Phase 01-scaffold P02 | 30 | 3 tasks | 7 files |
+| Phase 01-scaffold P03 | 5 | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -67,6 +68,7 @@ Recent decisions affecting current work:
 - [Phase 01-scaffold]: ConnectionState uses case failed(String) not Error for Swift 6 Sendable conformance
 - [Phase 01-scaffold]: @MainActor on AWSVPNClientApp struct required to resolve Swift 6 @State + @MainActor class init error
 - [Phase 01-scaffold]: Config directory creation inline in VPNManager.init() using try? — idempotent, no separate setup
+- [Phase 01-scaffold]: XcodeGen embed+copy.destination:executables places aws-connect into AWSVPNClient.app/Contents/MacOS/ — primary approach worked, postBuildScript fallback not needed
 
 ### Pending Todos
 
@@ -79,6 +81,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-19T21:55:39.140Z
-Stopped at: Completed 01-02-PLAN.md
+Last session: 2026-03-20T00:32:16.012Z
+Stopped at: Completed 01-03-PLAN.md
 Resume file: None
