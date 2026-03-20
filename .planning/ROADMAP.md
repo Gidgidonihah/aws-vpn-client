@@ -64,7 +64,11 @@ Plans:
   3. A config in the authenticating state is non-clickable until the SAML flow completes or fails
   4. User can add a .conf file via "Add Config..." and it appears in the menu immediately
   5. User can remove a config via the "Remove Config" submenu and it disappears from the menu
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 03-01-PLAN.md — TDD: isActive on ConnectionState + loadConfigs/addConfig/removeConfig on VPNManager
+- [ ] 03-02-PLAN.md — Rewrite StatusMenuView with full menu layout, NSOpenPanel, submenus
+- [ ] 03-03-PLAN.md — Human verification of menu UI and config management flows
 
 ### Phase 4: IPC & CLI
 **Goal**: The companion aws-connect CLI can control the running app and query connection status over a Unix socket, enabling scripting and terminal workflows
@@ -96,6 +100,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 |-------|----------------|--------|-----------|
 | 1. Scaffold | 3/3 | Complete   | 2026-03-20 |
 | 2. Connection Lifecycle | 5/5 | Complete   | 2026-03-20 |
-| 3. Menu UI + Config Management | 0/TBD | Not started | - |
+| 3. Menu UI + Config Management | 0/3 | Not started | - |
 | 4. IPC & CLI | 0/TBD | Not started | - |
 | 5. Cleanup & Docs | 0/TBD | Not started | - |
