@@ -76,3 +76,18 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.local.VPNCoreTests
+
+schemes:
+  AWSVPNClient:
+    build:
+      targets:
+        AWSVPNClient: all
+        VPNCore: all
+        aws-connect: all
+        VPNCoreTests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - VPNCoreTests

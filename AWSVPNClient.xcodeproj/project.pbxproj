@@ -8,17 +8,23 @@
 
 /* Begin PBXBuildFile section */
 		0192A090A29E6B626590A536 /* VPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4B52314B2F87C8C92A0D34 /* VPNManager.swift */; };
+		0B5676F5017795CE11404988 /* VPNConfigParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9CBD0CF540C7321F3E2D9E /* VPNConfigParsingTests.swift */; };
 		11F909A70612F3E5F1009D19 /* VPNCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9E2609155B8084A402FA637 /* VPNCore.framework */; };
 		15A81CA6DA9CC172CE841876 /* VPNConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70FD4EACFB51DFAAEB296BA6 /* VPNConfig.swift */; };
 		1C7FEA5F03C5FEE460795397 /* VPNCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A9E2609155B8084A402FA637 /* VPNCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2AB1B3A10143D56384B3ADBD /* VPNCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9E2609155B8084A402FA637 /* VPNCore.framework */; };
+		33AA3B5EB4FBD449DC245BFF /* AuthHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4867DE571903E422E357759 /* AuthHelpersTests.swift */; };
 		352D3A0533BB189B1E50232D /* VPNCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AF2CAF6B337AAAAF647A917 /* VPNCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4878A375853F5EA45C11061F /* ConnectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36369211D4DE875CBE19D676 /* ConnectionState.swift */; };
+		5FEB0F6F73E4789C9237BE72 /* SAMLServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AEF7EA664B6B37915D8F694 /* SAMLServerTests.swift */; };
 		7797EAC6A17F1C088825FCF8 /* AWSVPNClientApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091FC811AE3462F8FCB637AC /* AWSVPNClientApp.swift */; };
 		77E427B5A21D7B8A0C98DBB5 /* VPNError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E3C54DDEFC7D43520CD672F /* VPNError.swift */; };
 		7C44B4E5639AE2EAAAD9BBC1 /* VPNCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9E2609155B8084A402FA637 /* VPNCore.framework */; };
+		8D13C09135FB7BA77347F914 /* VPNManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE33B11738F37FBCAAC2B948 /* VPNManagerTests.swift */; };
+		ACC02AF849C6417C259C916B /* ConnectionStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DBC87CCEE11C0984CB844E2 /* ConnectionStateTests.swift */; };
 		BC2ACA58AC93661567AFBD4A /* StatusMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F3E059C62AD5DCA70A78EE1 /* StatusMenuView.swift */; };
 		CC50E1A75A7A36B27D7873A5 /* VPNCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A9E2609155B8084A402FA637 /* VPNCore.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		D5FE109BC01FDF3E498AE485 /* CRV1ParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E766F17145FAAC06EBC4D97B /* CRV1ParserTests.swift */; };
 		E40B3A6EEEDAC998584C0B8F /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9CB6AFBF6F53D9BA1FF675 /* main.swift */; };
 		EC54F54ED8D16B672B578D0B /* aws-connect in Embed Dependencies */ = {isa = PBXBuildFile; fileRef = 9B0AEE3F20A70BE15C514D48 /* aws-connect */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -92,6 +98,7 @@
 
 /* Begin PBXFileReference section */
 		091FC811AE3462F8FCB637AC /* AWSVPNClientApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWSVPNClientApp.swift; sourceTree = "<group>"; };
+		0DBC87CCEE11C0984CB844E2 /* ConnectionStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionStateTests.swift; sourceTree = "<group>"; };
 		12B882FA9F9544A4FE3D1AFA /* VPNCore-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "VPNCore-Info.plist"; sourceTree = "<group>"; };
 		36369211D4DE875CBE19D676 /* ConnectionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionState.swift; sourceTree = "<group>"; };
 		3816E3CBB3FA1E88A7322D11 /* AWSVPNClient-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "AWSVPNClient-Info.plist"; sourceTree = "<group>"; };
@@ -100,12 +107,17 @@
 		6A9CB6AFBF6F53D9BA1FF675 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		6E3C54DDEFC7D43520CD672F /* VPNError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNError.swift; sourceTree = "<group>"; };
 		70FD4EACFB51DFAAEB296BA6 /* VPNConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNConfig.swift; sourceTree = "<group>"; };
+		7AEF7EA664B6B37915D8F694 /* SAMLServerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SAMLServerTests.swift; sourceTree = "<group>"; };
 		7AF2CAF6B337AAAAF647A917 /* VPNCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VPNCore.h; sourceTree = "<group>"; };
 		7F3E059C62AD5DCA70A78EE1 /* StatusMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusMenuView.swift; sourceTree = "<group>"; };
 		9B0AEE3F20A70BE15C514D48 /* aws-connect */ = {isa = PBXFileReference; includeInIndex = 0; path = "aws-connect"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4867DE571903E422E357759 /* AuthHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthHelpersTests.swift; sourceTree = "<group>"; };
 		A6BF0AB1C7F57870E32D7CCF /* AWSVPNClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AWSVPNClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9E2609155B8084A402FA637 /* VPNCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VPNCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC9CBD0CF540C7321F3E2D9E /* VPNConfigParsingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNConfigParsingTests.swift; sourceTree = "<group>"; };
 		E349DF4ECB712C86192A9629 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		E766F17145FAAC06EBC4D97B /* CRV1ParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CRV1ParserTests.swift; sourceTree = "<group>"; };
+		EE33B11738F37FBCAAC2B948 /* VPNManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNManagerTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,7 +172,13 @@
 		89512B1B8A87108BC716A628 /* VPNCoreTests */ = {
 			isa = PBXGroup;
 			children = (
+				A4867DE571903E422E357759 /* AuthHelpersTests.swift */,
+				0DBC87CCEE11C0984CB844E2 /* ConnectionStateTests.swift */,
+				E766F17145FAAC06EBC4D97B /* CRV1ParserTests.swift */,
 				E349DF4ECB712C86192A9629 /* Info.plist */,
+				7AEF7EA664B6B37915D8F694 /* SAMLServerTests.swift */,
+				CC9CBD0CF540C7321F3E2D9E /* VPNConfigParsingTests.swift */,
+				EE33B11738F37FBCAAC2B948 /* VPNManagerTests.swift */,
 			);
 			path = VPNCoreTests;
 			sourceTree = "<group>";
@@ -356,6 +374,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				33AA3B5EB4FBD449DC245BFF /* AuthHelpersTests.swift in Sources */,
+				D5FE109BC01FDF3E498AE485 /* CRV1ParserTests.swift in Sources */,
+				ACC02AF849C6417C259C916B /* ConnectionStateTests.swift in Sources */,
+				5FEB0F6F73E4789C9237BE72 /* SAMLServerTests.swift in Sources */,
+				0B5676F5017795CE11404988 /* VPNConfigParsingTests.swift in Sources */,
+				8D13C09135FB7BA77347F914 /* VPNManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
