@@ -34,7 +34,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 Plans:
 - [x] 01-01-PLAN.md — Xcode project creation with three targets, framework embedding, and rpath spike
 - [x] 01-02-PLAN.md — VPNCore types (VPNConfig, ConnectionState, VPNManager) and MenuBarExtra shell wiring
-- [ ] 01-03-PLAN.md — Gap closure: copy aws-connect binary into app bundle via build phase
+- [x] 01-03-PLAN.md — Gap closure: copy aws-connect binary into app bundle via build phase
 
 ### Phase 2: Connection Lifecycle
 **Goal**: A VPN connection can be initiated and terminated end-to-end — SAML auth completes, openvpn runs as a background subprocess, and no orphaned processes or credential files survive
@@ -46,7 +46,13 @@ Plans:
   3. Clicking a connected config disconnects it and the openvpn process exits
   4. Quitting the app terminates all running openvpn subprocesses — none survive app exit
   5. Per-connection log file appears at ~/Library/Logs/AWSVPNClient/<name>.log and receives openvpn output
-**Plans**: TBD
+**Plans**: 5 plans
+Plans:
+- [ ] 02-01-PLAN.md — Wave 0: XCTest target, VPNError type, --writepid verification, test stubs
+- [ ] 02-02-PLAN.md — Config parsing + auth helpers (VPNConfigParser, randomHex, CRV1, credentials) via TDD
+- [ ] 02-03-PLAN.md — SAMLServer: long-lived NWListener with CheckedContinuation via TDD
+- [ ] 02-04-PLAN.md — VPNManager.connect(): full SAML auth flow + openvpn subprocess + stdout monitoring
+- [ ] 02-05-PLAN.md — VPNManager.disconnect() + AppDelegate termination cleanup + human verification
 
 ### Phase 3: Menu UI + Config Management
 **Goal**: The menu accurately reflects live connection state for all configs, and users can add and remove configs without touching the file system manually
@@ -89,7 +95,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Scaffold | 3/3 | Complete   | 2026-03-20 |
-| 2. Connection Lifecycle | 0/TBD | Not started | - |
+| 2. Connection Lifecycle | 0/5 | Planning complete | - |
 | 3. Menu UI + Config Management | 0/TBD | Not started | - |
 | 4. IPC & CLI | 0/TBD | Not started | - |
 | 5. Cleanup & Docs | 0/TBD | Not started | - |
