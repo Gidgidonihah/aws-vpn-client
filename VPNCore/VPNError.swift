@@ -26,4 +26,13 @@ public enum VPNError: Error, Sendable, LocalizedError {
         let full = errorDescription ?? "Unknown error"
         return full.count <= 30 ? full : String(full.prefix(27)) + "..."
     }
+
+    /// Static helper to get short description from any Error.
+    public static func shortDesc(_ error: Error) -> String {
+        if let vpnError = error as? VPNError {
+            return vpnError.shortDescription
+        }
+        let desc = error.localizedDescription
+        return desc.count <= 30 ? desc : String(desc.prefix(27)) + "..."
+    }
 }

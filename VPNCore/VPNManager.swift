@@ -1,3 +1,4 @@
+import AppKit
 import Foundation
 import Observation
 
@@ -16,19 +17,336 @@ public final class VPNManager {
             .appendingPathComponent("AWSVPNClient/configs", isDirectory: true)
     }()
 
+    public static let logsDirectory: URL = {
+        FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("Logs/AWSVPNClient", isDirectory: true)
+    }()
+
+    private let samlServer: SAMLServer?
+    private var activeProcesses: [String: Process] = [:]   // configName -> sudo openvpn Process
+    private var openvpnPIDs: [String: Int32] = [:]          // configName -> real openvpn PID from --writepid
+    private let samlTimeoutSeconds: TimeInterval = 30
+
+    private let openvpnPath: String = {
+        for path in ["/usr/local/bin/openvpn", "/opt/homebrew/bin/openvpn", "/usr/bin/openvpn"] {
+            if FileManager.default.fileExists(atPath: path) { return path }
+        }
+        return "openvpn"
+    }()
+
     public init() {
         try? FileManager.default.createDirectory(
             at: Self.configsDirectory,
             withIntermediateDirectories: true,
             attributes: nil
         )
+        try? FileManager.default.createDirectory(
+            at: Self.logsDirectory,
+            withIntermediateDirectories: true,
+            attributes: nil
+        )
+        self.samlServer = try? SAMLServer()
     }
 
     public func connect(_ config: VPNConfig) async throws {
-        fatalError("Phase 2")
+        // CONN-01: Guard -- block if any config is authenticating
+        if let authenticatingEntry = connections.first(where: {
+            if case .authenticating = $0.value { return true }
+            return false
+        }) {
+            // If THIS config is authenticating, cancel it (CONTEXT.md: cancel on click)
+            if authenticatingEntry.key == config.name {
+                await cancelAuth(for: config)
+                return
+            }
+            // Another config is authenticating -- block
+            throw VPNError.alreadyAuthenticating
+        }
+
+        // Set state to authenticating (if .failed, allow immediate retry)
+        connections[config.name] = .authenticating
+
+        do {
+            // 1. Parse config
+            let parsed = try VPNConfigParser.parse(fileURL: config.fileURL)
+
+            // 2. Write filtered config to temp file.
+            // NOTE: Do NOT defer-delete filteredConfURL here. The sudo openvpn process needs
+            // this file to remain on disk while it runs. The terminationHandler in
+            // spawnSudoOpenvpn() deletes it after the process exits.
+            let filteredConfURL = URL(fileURLWithPath: NSTemporaryDirectory())
+                .appendingPathComponent("aws-vpn-conf-\(config.name)-\(UUID().uuidString).conf")
+            try parsed.filteredContent.write(to: filteredConfURL, atomically: true, encoding: .utf8)
+            try FileManager.default.setAttributes(
+                [.posixPermissions: 0o600],
+                ofItemAtPath: filteredConfURL.path
+            )
+
+            // 3. Resolve hostname: randomHex(12) + "." + host, then dig
+            let randPrefix = randomHex(byteCount: 12)
+            let fqdn = "\(randPrefix).\(parsed.host)"
+            let serverIP = try await resolveDNS(hostname: fqdn)
+
+            // 4. Write dummy creds (CONN-06: temp file with 0600, defer cleanup)
+            let dummyCredsPath = NSTemporaryDirectory()
+                + "aws-vpn-creds-dummy-\(config.name)-\(UUID().uuidString).txt"
+            FileManager.default.createFile(
+                atPath: dummyCredsPath,
+                contents: dummyCredentials().data(using: .utf8),
+                attributes: [.posixPermissions: 0o600]
+            )
+            defer { try? FileManager.default.removeItem(atPath: dummyCredsPath) }
+
+            // 5. Run dummy openvpn to get CRV1 challenge
+            let challenge = try await runDummyOpenvpn(
+                filteredConfPath: filteredConfURL.path,
+                proto: parsed.proto,
+                serverIP: serverIP,
+                port: parsed.port,
+                credsPath: dummyCredsPath
+            )
+
+            // Check if cancelled during dummy openvpn
+            guard connections[config.name]?.isAuthenticating == true else { return }
+
+            // 6. Open browser for SAML
+            guard let samlURL = URL(string: challenge.url) else {
+                throw VPNError.authChallengeFailed("Invalid SAML URL: \(challenge.url)")
+            }
+            NSWorkspace.shared.open(samlURL)
+
+            // 7. Wait for SAML response with timeout
+            guard let samlServer else {
+                throw VPNError.connectionFailed("SAML server not initialized")
+            }
+
+            let samlResponse: String
+            do {
+                samlResponse = try await withThrowingTaskGroup(of: String.self) { group in
+                    group.addTask {
+                        try await samlServer.waitForSAMLResponse()
+                    }
+                    group.addTask {
+                        try await Task.sleep(nanoseconds: UInt64(self.samlTimeoutSeconds * 1_000_000_000))
+                        samlServer.cancelCurrentWait()
+                        throw VPNError.samlTimeout
+                    }
+                    let result = try await group.next()!
+                    group.cancelAll()
+                    return result
+                }
+            } catch is CancellationError {
+                throw VPNError.samlTimeout
+            }
+
+            // Check if cancelled during SAML wait
+            guard connections[config.name]?.isAuthenticating == true else { return }
+
+            // 8. URL-encode SAML response and write real creds (CONN-06)
+            let encoded = urlEncodeSAML(samlResponse)
+            let realCredsPath = NSTemporaryDirectory()
+                + "aws-vpn-creds-real-\(config.name)-\(UUID().uuidString).txt"
+            FileManager.default.createFile(
+                atPath: realCredsPath,
+                contents: realCredentials(sid: challenge.sid, urlEncodedSAML: encoded).data(using: .utf8),
+                attributes: [.posixPermissions: 0o600]
+            )
+            defer { try? FileManager.default.removeItem(atPath: realCredsPath) }
+
+            // 9. Create log file (CONN-08)
+            let logFileURL = Self.logsDirectory.appendingPathComponent("\(config.name).log")
+            FileManager.default.createFile(atPath: logFileURL.path, contents: nil, attributes: nil)
+            let logFileHandle = try FileHandle(forWritingTo: logFileURL)
+
+            // 10. Spawn sudo openvpn (CONN-04)
+            // Pass filteredConfPath so the terminationHandler can delete it after openvpn exits
+            let pidPath = "/tmp/aws-vpn-\(config.name).pid"
+            try spawnSudoOpenvpn(
+                config: config,
+                filteredConfPath: filteredConfURL.path,
+                proto: parsed.proto,
+                serverIP: serverIP,
+                port: parsed.port,
+                credsPath: realCredsPath,
+                pidPath: pidPath,
+                logFileHandle: logFileHandle
+            )
+
+        } catch {
+            if connections[config.name] != nil {
+                connections[config.name] = .failed(VPNError.shortDesc(error))
+            }
+            throw error
+        }
     }
 
     public func disconnect(_ config: VPNConfig) async throws {
         fatalError("Phase 2")
+    }
+
+    // MARK: - Private helpers
+
+    private func cancelAuth(for config: VPNConfig) async {
+        // Cancel SAML wait
+        samlServer?.cancelCurrentWait()
+
+        // Kill dummy openvpn if running
+        if let process = activeProcesses[config.name], process.isRunning {
+            process.terminate()
+        }
+        activeProcesses.removeValue(forKey: config.name)
+
+        // Reset to disconnected (CONTEXT.md: no .failed on cancel)
+        connections[config.name] = .disconnected
+    }
+
+    private func resolveDNS(hostname: String) async throws -> String {
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/dig")
+        process.arguments = ["a", "+short", hostname]
+        let pipe = Pipe()
+        process.standardOutput = pipe
+        try process.run()
+        process.waitUntilExit()  // OK here -- dig is fast (< 1 second)
+
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        guard let output = String(data: data, encoding: .utf8),
+              let ip = output.components(separatedBy: "\n").first(where: { !$0.isEmpty }) else {
+            throw VPNError.connectionFailed("DNS resolution failed for \(hostname)")
+        }
+        return ip
+    }
+
+    private func runDummyOpenvpn(
+        filteredConfPath: String,
+        proto: String,
+        serverIP: String,
+        port: String,
+        credsPath: String
+    ) async throws -> CRV1Challenge {
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: openvpnPath)
+        process.arguments = [
+            "--config", filteredConfPath,
+            "--verb", "3",
+            "--proto", proto,
+            "--remote", serverIP, port,
+            "--auth-user-pass", credsPath
+        ]
+        let pipe = Pipe()
+        process.standardOutput = pipe
+        process.standardError = pipe
+        try process.run()
+        process.waitUntilExit()  // Expected to fail quickly with AUTH_FAILED
+
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        let output = String(data: data, encoding: .utf8) ?? ""
+
+        guard let crv1Line = findCRV1Line(in: output),
+              let challenge = parseCRV1Line(crv1Line) else {
+            throw VPNError.authChallengeFailed("No AUTH_FAILED,CRV1 line in openvpn output")
+        }
+        return challenge
+    }
+
+    private func spawnSudoOpenvpn(
+        config: VPNConfig,
+        filteredConfPath: String,
+        proto: String,
+        serverIP: String,
+        port: String,
+        credsPath: String,
+        pidPath: String,
+        logFileHandle: FileHandle
+    ) throws {
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/sudo")
+        process.arguments = [
+            openvpnPath,
+            "--config", filteredConfPath,
+            "--verb", "3",
+            "--auth-nocache",
+            "--inactive", "3600",
+            "--script-security", "2",
+            "--proto", proto,
+            "--remote", serverIP, port,
+            "--auth-user-pass", credsPath,
+            "--writepid", pidPath
+        ]
+
+        // CONN-08: stdout + stderr to same pipe, then to log file + line scanner
+        let pipe = Pipe()
+        process.standardOutput = pipe
+        process.standardError = pipe
+
+        // Swift 6 safe: use @unchecked Sendable wrapper for mutable state in readabilityHandler
+        final class LineScanner: @unchecked Sendable {
+            var buffer = Data()
+            var connected = false
+        }
+        let scanner = LineScanner()
+        let configName = config.name
+
+        pipe.fileHandleForReading.readabilityHandler = { [weak self] handle in
+            let data = handle.availableData
+            guard !data.isEmpty else {
+                handle.readabilityHandler = nil
+                try? logFileHandle.close()
+                return
+            }
+
+            // Write to log file (CONN-08: file only, no in-memory buffer)
+            try? logFileHandle.write(contentsOf: data)
+
+            // Scan for "Initialization Sequence Completed" (only until connected)
+            guard !scanner.connected else { return }
+            scanner.buffer.append(data)
+
+            while let nl = scanner.buffer.firstIndex(of: UInt8(ascii: "\n")) {
+                let lineData = scanner.buffer[scanner.buffer.startIndex...nl]
+                if let line = String(data: lineData, encoding: .utf8),
+                   line.contains("Initialization Sequence Completed") {
+                    scanner.connected = true
+                    Task { @MainActor [weak self] in
+                        self?.connections[configName] = .connected
+                        // Read PID file after connected
+                        if let pidString = try? String(contentsOfFile: pidPath, encoding: .utf8),
+                           let pid = Int32(pidString.trimmingCharacters(in: .whitespacesAndNewlines)) {
+                            self?.openvpnPIDs[configName] = pid
+                        }
+                    }
+                    scanner.buffer = Data()
+                    break
+                }
+                scanner.buffer = Data(scanner.buffer[scanner.buffer.index(after: nl)...])
+            }
+        }
+
+        // Termination handler: unexpected exit -> .failed (Pitfall 13: never use waitUntilExit)
+        // Also cleans up the filtered conf file since openvpn no longer needs it after exit.
+        process.terminationHandler = { [weak self] proc in
+            // Delete filtered conf file now that openvpn has exited
+            try? FileManager.default.removeItem(atPath: filteredConfPath)
+
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                // Clean up PID tracking
+                self.activeProcesses.removeValue(forKey: configName)
+                self.openvpnPIDs.removeValue(forKey: configName)
+                try? FileManager.default.removeItem(atPath: pidPath)
+
+                // Only transition to failed if we were connected (unexpected exit)
+                if case .connected = self.connections[configName] {
+                    self.connections[configName] = .failed("openvpn exited unexpectedly")
+                } else if case .authenticating = self.connections[configName] {
+                    // Process exited during auth -- also a failure
+                    self.connections[configName] = .failed("openvpn exited during auth")
+                }
+                // If .disconnecting, the disconnect() method handles the transition
+            }
+        }
+
+        try process.run()
+        activeProcesses[config.name] = process
     }
 }
