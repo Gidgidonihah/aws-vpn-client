@@ -44,6 +44,11 @@ targets:
       - target: VPNCore
         embed: true
         codeSign: false
+      - target: aws-connect
+        embed: true
+        codeSign: false
+        copy:
+          destination: executables
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.local.AWSVPNClient

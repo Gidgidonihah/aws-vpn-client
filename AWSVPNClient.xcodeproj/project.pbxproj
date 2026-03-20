@@ -17,6 +17,7 @@
 		BC2ACA58AC93661567AFBD4A /* StatusMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F3E059C62AD5DCA70A78EE1 /* StatusMenuView.swift */; };
 		CC50E1A75A7A36B27D7873A5 /* VPNCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A9E2609155B8084A402FA637 /* VPNCore.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		E40B3A6EEEDAC998584C0B8F /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9CB6AFBF6F53D9BA1FF675 /* main.swift */; };
+		EC54F54ED8D16B672B578D0B /* aws-connect in Embed Dependencies */ = {isa = PBXBuildFile; fileRef = 9B0AEE3F20A70BE15C514D48 /* aws-connect */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -26,6 +27,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = ACC995822B33676851045385;
 			remoteInfo = VPNCore;
+		};
+		76BB618C620E5C75F239D013 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0410532CE37F9FA418AE6828 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6CCDB66F270CB322A9623961;
+			remoteInfo = "aws-connect";
 		};
 		7DC33692C3DA932D27B195C8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -46,6 +54,17 @@
 				CC50E1A75A7A36B27D7873A5 /* VPNCore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		732D91FFA71191076F1FE994 /* Embed Dependencies */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+				EC54F54ED8D16B672B578D0B /* aws-connect in Embed Dependencies */,
+			);
+			name = "Embed Dependencies";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -193,11 +212,13 @@
 				D7FC11CB931265BA9A468FC6 /* Sources */,
 				1E6A58761CF159FE8984703E /* Frameworks */,
 				1540696692BBE77A332F32B5 /* Embed Frameworks */,
+				732D91FFA71191076F1FE994 /* Embed Dependencies */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				3501E368640A187EFAE9F42F /* PBXTargetDependency */,
+				0E7D3E11BE2D1A10B9B73D58 /* PBXTargetDependency */,
 			);
 			name = AWSVPNClient;
 			packageProductDependencies = (
@@ -269,6 +290,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		0E7D3E11BE2D1A10B9B73D58 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6CCDB66F270CB322A9623961 /* aws-connect */;
+			targetProxy = 76BB618C620E5C75F239D013 /* PBXContainerItemProxy */;
+		};
 		3501E368640A187EFAE9F42F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = ACC995822B33676851045385 /* VPNCore */;
