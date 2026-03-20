@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Phase 2 context gathered
-last_updated: "2026-03-20T00:51:53.967Z"
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-03-20T18:38:57.209Z"
 last_activity: 2026-03-17 — Roadmap created
 progress:
   total_phases: 5
   completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
+  total_plans: 8
+  completed_plans: 4
   percent: 0
 ---
 
@@ -52,6 +52,7 @@ Progress: [░░░░░░░░░░] 0%
 *Updated after each plan completion*
 | Phase 01-scaffold P02 | 30 | 3 tasks | 7 files |
 | Phase 01-scaffold P03 | 5 | 1 tasks | 2 files |
+| Phase 02-connection-lifecycle P01 | 228 | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -69,6 +70,8 @@ Recent decisions affecting current work:
 - [Phase 01-scaffold]: @MainActor on AWSVPNClientApp struct required to resolve Swift 6 @State + @MainActor class init error
 - [Phase 01-scaffold]: Config directory creation inline in VPNManager.init() using try? — idempotent, no separate setup
 - [Phase 01-scaffold]: XcodeGen embed+copy.destination:executables places aws-connect into AWSVPNClient.app/Contents/MacOS/ — primary approach worked, postBuildScript fallback not needed
+- [Phase 02-connection-lifecycle]: --writepid flag confirmed supported by installed openvpn binary — primary PID tracking strategy adopted, pgrep fallback not needed
+- [Phase 02-connection-lifecycle]: Explicit schemes block required in project.yml — XcodeGen does not auto-associate unit test targets with the app scheme
 
 ### Pending Todos
 
@@ -81,6 +84,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-20T00:51:53.965Z
-Stopped at: Phase 2 context gathered
-Resume file: .planning/phases/02-connection-lifecycle/02-CONTEXT.md
+Last session: 2026-03-20T18:38:57.206Z
+Stopped at: Completed 02-01-PLAN.md
+Resume file: None
