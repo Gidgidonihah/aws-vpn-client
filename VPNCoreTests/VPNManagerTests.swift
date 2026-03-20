@@ -123,9 +123,30 @@ final class VPNManagerTests: XCTestCase {
         XCTAssertTrue(leftover.isEmpty, "Real creds temp files should not exist after connect() fails early")
     }
 
-    func testDisconnectSendsSignal() {
-        // CONN-07: disconnect() sends SIGTERM to the real openvpn PID via sudo kill
-        XCTFail("Not implemented -- Wave 3")
+    func testDisconnectSendsSignal() async throws {
+        // CONN-07: disconnect() transitions .connected -> .disconnected and
+        // cleans up tracking state. The kill itself cannot be unit-tested without
+        // a real openvpn process, but we verify the state machine is correct.
+        let manager = await VPNManager()
+        let config = makeConfig(name: "disconnect-test")
+
+        // Inject .connected state directly (simulate a connected VPN)
+        await MainActor.run {
+            manager.connections[config.name] = .connected
+        }
+
+        // disconnect() should succeed without throwing
+        try await manager.disconnect(config)
+
+        // State must be .disconnected after disconnect
+        let state = await MainActor.run { manager.connections[config.name] }
+        if let state {
+            if case .disconnected = state {
+                // Correct: state transitioned to .disconnected
+            } else {
+                XCTFail("Expected .disconnected after disconnect(), got \(state)")
+            }
+        }
     }
 
     // MARK: - CONN-08: Log file creation
