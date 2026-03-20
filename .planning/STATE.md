@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 02-02-PLAN.md
-last_updated: "2026-03-20T18:43:56.688Z"
+stopped_at: Completed 02-04-PLAN.md
+last_updated: "2026-03-20T18:51:14.410Z"
 last_activity: 2026-03-17 — Roadmap created
 progress:
   total_phases: 5
   completed_phases: 1
   total_plans: 8
-  completed_plans: 6
+  completed_plans: 7
   percent: 0
 ---
 
@@ -55,6 +55,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 02-connection-lifecycle P01 | 228 | 2 tasks | 10 files |
 | Phase 02-connection-lifecycle P03 | 2 | 1 tasks | 2 files |
 | Phase 02-connection-lifecycle P02 | 3 | 2 tasks | 5 files |
+| Phase 02-connection-lifecycle P04 | 4 | 1 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,9 @@ Recent decisions affecting current work:
 - [Phase 02-connection-lifecycle]: VPNConfigParser is a caseless enum namespace — no state, all static methods, prevents instantiation
 - [Phase 02-connection-lifecycle]: urlEncodeSAML removes '+' from CharacterSet.urlQueryAllowed so it encodes as %2B, matching Rust urlencoding::encode
 - [Phase 02-connection-lifecycle]: AuthHelpers uses components(separatedBy:) not split(separator:) for CRV1 colon-split to preserve empty subsequences and keep field indices stable
+- [Phase 02-connection-lifecycle]: Filtered conf temp file deleted in terminationHandler (not defer in connect()) to avoid race where openvpn hasn't read the file yet
+- [Phase 02-connection-lifecycle]: SAML timeout implemented as withThrowingTaskGroup race between SAMLServer.waitForSAMLResponse() and Task.sleep(30s)
+- [Phase 02-connection-lifecycle]: openvpnPath resolved at init via static closure checking /usr/local/bin, /opt/homebrew/bin, /usr/bin before falling back to PATH
 
 ### Pending Todos
 
@@ -91,6 +95,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-20T18:43:56.686Z
-Stopped at: Completed 02-02-PLAN.md
+Last session: 2026-03-20T18:51:14.408Z
+Stopped at: Completed 02-04-PLAN.md
 Resume file: None
