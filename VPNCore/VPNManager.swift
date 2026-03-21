@@ -56,6 +56,7 @@ public final class VPNManager {
             attributes: nil
         )
         self.samlServer = try? SAMLServer()
+        loadConfigs()
     }
 
     public func connect(_ config: VPNConfig) async throws {
@@ -247,16 +248,36 @@ public final class VPNManager {
     // MARK: - Config Management (Phase 3)
 
     public func loadConfigs() {
-        // TODO: implement in Phase 3 Task 2
+        let urls = (try? FileManager.default.contentsOfDirectory(
+            at: Self.configsDirectory,
+            includingPropertiesForKeys: nil,
+            options: .skipsHiddenFiles
+        )) ?? []
+        configs = urls
+            .filter { $0.pathExtension == "conf" }
+            .map { VPNConfig(fileURL: $0) }
+            .sorted { $0.name.localizedCompare($1.name) == .orderedAscending }
     }
 
     public func addConfig(from sourceURL: URL) throws {
-        // TODO: implement in Phase 3 Task 2
-        throw VPNError.connectionFailed("not implemented")
+        // Ensure directory exists (guard against directory deletion)
+        try? FileManager.default.createDirectory(
+            at: Self.configsDirectory, withIntermediateDirectories: true, attributes: nil)
+        let destURL = Self.configsDirectory.appendingPathComponent(sourceURL.lastPathComponent)
+        // Silently overwrite if exists
+        try? FileManager.default.removeItem(at: destURL)
+        try FileManager.default.copyItem(at: sourceURL, to: destURL)
+        // Remove existing entry with same name before appending (prevents duplicates)
+        let newConfig = VPNConfig(fileURL: destURL)
+        configs.removeAll { $0.name == newConfig.name }
+        configs.append(newConfig)
+        configs.sort { $0.name.localizedCompare($1.name) == .orderedAscending }
     }
 
     public func removeConfig(_ config: VPNConfig) {
-        // TODO: implement in Phase 3 Task 2
+        try? FileManager.default.trashItem(at: config.fileURL, resultingItemURL: nil)
+        configs.removeAll { $0.id == config.id }
+        connections.removeValue(forKey: config.name)
     }
 
     // MARK: - Private helpers
