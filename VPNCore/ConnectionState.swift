@@ -21,4 +21,8 @@ public enum ConnectionState: Sendable {
         if case .disconnecting = self { return true }
         return false
     }
+
+    public var isActive: Bool {
+        isConnected || isAuthenticating || isDisconnecting
+    }
 }

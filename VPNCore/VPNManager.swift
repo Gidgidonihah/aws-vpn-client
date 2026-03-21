@@ -244,6 +244,21 @@ public final class VPNManager {
         }
     }
 
+    // MARK: - Config Management (Phase 3)
+
+    public func loadConfigs() {
+        // TODO: implement in Phase 3 Task 2
+    }
+
+    public func addConfig(from sourceURL: URL) throws {
+        // TODO: implement in Phase 3 Task 2
+        throw VPNError.connectionFailed("not implemented")
+    }
+
+    public func removeConfig(_ config: VPNConfig) {
+        // TODO: implement in Phase 3 Task 2
+    }
+
     // MARK: - Private helpers
 
     private func cancelAuth(for config: VPNConfig) async {
