@@ -100,6 +100,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 |-------|----------------|--------|-----------|
 | 1. Scaffold | 3/3 | Complete   | 2026-03-20 |
 | 2. Connection Lifecycle | 5/5 | Complete   | 2026-03-20 |
-| 3. Menu UI + Config Management | 1/3 | In Progress|  |
+| 3. Menu UI + Config Management | 2/3 | In Progress|  |
 | 4. IPC & CLI | 0/TBD | Not started | - |
 | 5. Cleanup & Docs | 0/TBD | Not started | - |

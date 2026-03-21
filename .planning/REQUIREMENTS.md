@@ -30,11 +30,11 @@
 
 ### Menu Bar UI
 
-- [ ] **UI-01**: Menu bar icon is `lock.fill` when any connection is active, `lock.open` otherwise (template rendering for dark/light mode)
-- [ ] **UI-02**: Menu lists each config with per-config state — "● Connected" indicator for connected, "[authenticating…]" for in-progress, blank for disconnected
-- [ ] **UI-03**: Configs in authenticating state are non-clickable (disabled) during the SAML flow
-- [ ] **UI-04**: "View Logs ▶" submenu lists each config and opens its log file in Console.app
-- [ ] **UI-05**: "Quit" menu item terminates the app and all openvpn subprocesses
+- [x] **UI-01**: Menu bar icon is `lock.fill` when any connection is active, `lock.open` otherwise (template rendering for dark/light mode)
+- [x] **UI-02**: Menu lists each config with per-config state — "● Connected" indicator for connected, "[authenticating…]" for in-progress, blank for disconnected
+- [x] **UI-03**: Configs in authenticating state are non-clickable (disabled) during the SAML flow
+- [x] **UI-04**: "View Logs ▶" submenu lists each config and opens its log file in Console.app
+- [x] **UI-05**: "Quit" menu item terminates the app and all openvpn subprocesses
 
 ### IPC & CLI
 
@@ -90,11 +90,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONF-02 | Phase 3 | Complete |
 | CONF-03 | Phase 3 | Complete |
 | CONF-04 | Phase 3 | Complete |
-| UI-01 | Phase 3 | Pending |
-| UI-02 | Phase 3 | Pending |
-| UI-03 | Phase 3 | Pending |
-| UI-04 | Phase 3 | Pending |
-| UI-05 | Phase 3 | Pending |
+| UI-01 | Phase 3 | Complete |
+| UI-02 | Phase 3 | Complete |
+| UI-03 | Phase 3 | Complete |
+| UI-04 | Phase 3 | Complete |
+| UI-05 | Phase 3 | Complete |
 | IPC-01 | Phase 4 | Pending |
 | IPC-02 | Phase 4 | Pending |
 | IPC-03 | Phase 4 | Pending |
