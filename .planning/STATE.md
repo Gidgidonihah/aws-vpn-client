@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Phase 3 context gathered
-last_updated: "2026-03-20T22:02:22.460Z"
+stopped_at: Completed 03-menu-ui-config-management-01-PLAN.md
+last_updated: "2026-03-21T00:29:15.900Z"
 last_activity: 2026-03-17 — Roadmap created
 progress:
   total_phases: 5
   completed_phases: 2
-  total_plans: 8
-  completed_plans: 8
+  total_plans: 11
+  completed_plans: 9
   percent: 0
 ---
 
@@ -58,6 +58,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 02-connection-lifecycle P04 | 4 | 1 tasks | 4 files |
 | Phase 02-connection-lifecycle P05 | 15 | 3 tasks | 5 files |
 | Phase 02-connection-lifecycle P05 | 15 | 3 tasks | 5 files |
+| Phase 03-menu-ui-config-management P01 | 4 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -88,6 +89,9 @@ Recent decisions affecting current work:
 - [Phase 02-connection-lifecycle]: _updateAtexitPIDs defined in VPNCore not app target: VPNCore framework cannot call into embedding app
 - [Phase 02-connection-lifecycle]: atexit PID set uses nonisolated(unsafe) global: data race acceptable on crash-path safety net
 - [Phase 02-connection-lifecycle]: _updateAtexitPIDs defined in VPNCore (not AWSVPNClientApp) because VPNCore framework cannot call into the app target
+- [Phase 03-menu-ui-config-management]: TDD RED stubs in Swift: compile stubs added to VPNManager so isActive test could run before real implementations existed
+- [Phase 03-menu-ui-config-management]: loadConfigs() called in VPNManager.init() — configs array auto-populated on construction, no explicit caller burden
+- [Phase 03-menu-ui-config-management]: removeConfig uses FileManager.trashItem not NSWorkspace.recycle — synchronous, no AppKit dependency in VPNCore framework
 
 ### Pending Todos
 
@@ -100,6 +104,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-20T22:02:22.457Z
-Stopped at: Phase 3 context gathered
-Resume file: .planning/phases/03-menu-ui-config-management/03-CONTEXT.md
+Last session: 2026-03-21T00:29:15.898Z
+Stopped at: Completed 03-menu-ui-config-management-01-PLAN.md
+Resume file: None

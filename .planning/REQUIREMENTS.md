@@ -23,10 +23,10 @@
 
 ### Config Management
 
-- [ ] **CONF-01**: User can add a `.conf` file via NSOpenPanel ("Add Config…" in menu)
-- [ ] **CONF-02**: Config files stored in `~/Library/Application Support/AWSVPNClient/configs/`
-- [ ] **CONF-03**: User can remove a config via "Remove Config ▶" submenu
-- [ ] **CONF-04**: All configs in the directory are listed in the menu at launch and reflect changes after add/remove
+- [x] **CONF-01**: User can add a `.conf` file via NSOpenPanel ("Add Config…" in menu)
+- [x] **CONF-02**: Config files stored in `~/Library/Application Support/AWSVPNClient/configs/`
+- [x] **CONF-03**: User can remove a config via "Remove Config ▶" submenu
+- [x] **CONF-04**: All configs in the directory are listed in the menu at launch and reflect changes after add/remove
 
 ### Menu Bar UI
 
@@ -86,10 +86,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONN-06 | Phase 2 | Complete |
 | CONN-07 | Phase 2 | Complete |
 | CONN-08 | Phase 2 | Complete |
-| CONF-01 | Phase 3 | Pending |
-| CONF-02 | Phase 3 | Pending |
-| CONF-03 | Phase 3 | Pending |
-| CONF-04 | Phase 3 | Pending |
+| CONF-01 | Phase 3 | Complete |
+| CONF-02 | Phase 3 | Complete |
+| CONF-03 | Phase 3 | Complete |
+| CONF-04 | Phase 3 | Complete |
 | UI-01 | Phase 3 | Pending |
 | UI-02 | Phase 3 | Pending |
 | UI-03 | Phase 3 | Pending |
