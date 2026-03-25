@@ -24,12 +24,9 @@ struct StatusMenuView: View {
                         Task { @MainActor in try? await manager.connect(capturedConfig) }
                     }
                 } label: {
-                    HStack {
-                        Text(config.name)
-                        Spacer()
-                        Text(stateLabel(for: config))
-                            .foregroundStyle(stateColor(for: config))
-                    }
+                    let state = stateLabel(for: config)
+                    Text(state.isEmpty ? config.name : "\(config.name)  \(state)")
+                        .foregroundStyle(stateColor(for: config))
                 }
                 .disabled(isConfigDisabled(config))
             }

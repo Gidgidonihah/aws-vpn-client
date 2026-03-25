@@ -38,7 +38,7 @@ public final class VPNManager {
     private let samlTimeoutSeconds: TimeInterval = 30
 
     private let openvpnPath: String = {
-        for path in ["/usr/local/bin/openvpn", "/opt/homebrew/bin/openvpn", "/usr/bin/openvpn"] {
+        for path in ["/usr/local/bin/openvpn", "/opt/homebrew/bin/openvpn", "/opt/homebrew/sbin/openvpn", "/usr/bin/openvpn"] {
             if FileManager.default.fileExists(atPath: path) { return path }
         }
         return "openvpn"
@@ -114,7 +114,8 @@ public final class VPNManager {
                 proto: parsed.proto,
                 serverIP: serverIP,
                 port: parsed.port,
-                credsPath: dummyCredsPath
+                credsPath: dummyCredsPath,
+                openvpnPath: openvpnPath
             )
 
             // Check if cancelled during dummy openvpn
@@ -296,29 +297,38 @@ public final class VPNManager {
         connections[config.name] = .disconnected
     }
 
-    private func resolveDNS(hostname: String) async throws -> String {
+    private nonisolated func resolveDNS(hostname: String) async throws -> String {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/bin/dig")
         process.arguments = ["a", "+short", hostname]
         let pipe = Pipe()
         process.standardOutput = pipe
-        try process.run()
-        process.waitUntilExit()  // OK here -- dig is fast (< 1 second)
-
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        guard let output = String(data: data, encoding: .utf8),
-              let ip = output.components(separatedBy: "\n").first(where: { !$0.isEmpty }) else {
-            throw VPNError.connectionFailed("DNS resolution failed for \(hostname)")
+        return try await withCheckedThrowingContinuation { cont in
+            DispatchQueue.global(qos: .userInitiated).async {
+                do {
+                    try process.run()
+                    process.waitUntilExit()
+                    let data = pipe.fileHandleForReading.readDataToEndOfFile()
+                    guard let output = String(data: data, encoding: .utf8),
+                          let ip = output.components(separatedBy: "\n").first(where: { !$0.isEmpty }) else {
+                        cont.resume(throwing: VPNError.connectionFailed("DNS resolution failed for \(hostname)"))
+                        return
+                    }
+                    cont.resume(returning: ip)
+                } catch {
+                    cont.resume(throwing: error)
+                }
+            }
         }
-        return ip
     }
 
-    private func runDummyOpenvpn(
+    private nonisolated func runDummyOpenvpn(
         filteredConfPath: String,
         proto: String,
         serverIP: String,
         port: String,
-        credsPath: String
+        credsPath: String,
+        openvpnPath: String
     ) async throws -> CRV1Challenge {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: openvpnPath)
@@ -332,17 +342,24 @@ public final class VPNManager {
         let pipe = Pipe()
         process.standardOutput = pipe
         process.standardError = pipe
-        try process.run()
-        process.waitUntilExit()  // Expected to fail quickly with AUTH_FAILED
-
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        let output = String(data: data, encoding: .utf8) ?? ""
-
-        guard let crv1Line = findCRV1Line(in: output),
-              let challenge = parseCRV1Line(crv1Line) else {
-            throw VPNError.authChallengeFailed("No AUTH_FAILED,CRV1 line in openvpn output")
+        return try await withCheckedThrowingContinuation { cont in
+            DispatchQueue.global(qos: .userInitiated).async {
+                do {
+                    try process.run()
+                    process.waitUntilExit()
+                    let data = pipe.fileHandleForReading.readDataToEndOfFile()
+                    let output = String(data: data, encoding: .utf8) ?? ""
+                    guard let crv1Line = findCRV1Line(in: output),
+                          let challenge = parseCRV1Line(crv1Line) else {
+                        cont.resume(throwing: VPNError.authChallengeFailed("No AUTH_FAILED,CRV1 line in openvpn output"))
+                        return
+                    }
+                    cont.resume(returning: challenge)
+                } catch {
+                    cont.resume(throwing: error)
+                }
+            }
         }
-        return challenge
     }
 
     private func spawnSudoOpenvpn(
