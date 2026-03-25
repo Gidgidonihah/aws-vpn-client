@@ -15,11 +15,13 @@ struct StatusMenuView: View {
         } else {
             ForEach(vpnManager.configs) { config in
                 Button {
-                    let state = vpnManager.connections[config.name] ?? .disconnected
+                    let manager = vpnManager
+                    let capturedConfig = config
+                    let state = manager.connections[capturedConfig.name] ?? .disconnected
                     if state.isConnected || state.isDisconnecting {
-                        Task { try? await vpnManager.disconnect(config) }
+                        Task { @MainActor in try? await manager.disconnect(capturedConfig) }
                     } else {
-                        Task { try? await vpnManager.connect(config) }
+                        Task { @MainActor in try? await manager.connect(capturedConfig) }
                     }
                 } label: {
                     HStack {
