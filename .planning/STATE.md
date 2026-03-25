@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 03-menu-ui-config-management-02-PLAN.md
-last_updated: "2026-03-21T00:34:17.427Z"
+stopped_at: Completed 03-menu-ui-config-management-03-PLAN.md
+last_updated: "2026-03-25T22:03:24.337Z"
 last_activity: 2026-03-17 — Roadmap created
 progress:
   total_phases: 5
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 11
-  completed_plans: 10
+  completed_plans: 11
   percent: 0
 ---
 
@@ -35,6 +35,7 @@ Progress: [░░░░░░░░░░] 0%
 ## Performance Metrics
 
 **Velocity:**
+
 - Total plans completed: 0
 - Average duration: —
 - Total execution time: —
@@ -46,6 +47,7 @@ Progress: [░░░░░░░░░░] 0%
 | - | - | - | - |
 
 **Recent Trend:**
+
 - Last 5 plans: —
 - Trend: —
 
@@ -60,6 +62,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 02-connection-lifecycle P05 | 15 | 3 tasks | 5 files |
 | Phase 03-menu-ui-config-management P01 | 4 | 2 tasks | 3 files |
 | Phase 03-menu-ui-config-management P02 | 2 | 1 tasks | 1 files |
+| Phase 03-menu-ui-config-management P03 | 10 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -94,6 +97,7 @@ Recent decisions affecting current work:
 - [Phase 03-menu-ui-config-management]: loadConfigs() called in VPNManager.init() — configs array auto-populated on construction, no explicit caller burden
 - [Phase 03-menu-ui-config-management]: removeConfig uses FileManager.trashItem not NSWorkspace.recycle — synchronous, no AppKit dependency in VPNCore framework
 - [Phase 03-menu-ui-config-management]: StatusMenuView: NSApp.activate(ignoringOtherApps:true) must precede NSOpenPanel.runModal() for menu bar apps; Button actions use Task { try? await } for async VPNManager calls; View Logs creates log file before NSWorkspace.open
+- [Phase 03-menu-ui-config-management]: In .menuBarExtraStyle(.menu), capture @Environment ObservableObject before Task to prevent use-after-free on menu dismissal; annotate Task @MainActor
 
 ### Pending Todos
 
@@ -106,6 +110,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-21T00:34:17.425Z
-Stopped at: Completed 03-menu-ui-config-management-02-PLAN.md
+Last session: 2026-03-25T22:03:24.335Z
+Stopped at: Completed 03-menu-ui-config-management-03-PLAN.md
 Resume file: None
