@@ -17,6 +17,7 @@
 		33AA3B5EB4FBD449DC245BFF /* AuthHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4867DE571903E422E357759 /* AuthHelpersTests.swift */; };
 		352D3A0533BB189B1E50232D /* VPNCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AF2CAF6B337AAAAF647A917 /* VPNCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4878A375853F5EA45C11061F /* ConnectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36369211D4DE875CBE19D676 /* ConnectionState.swift */; };
+		4BCC6A3FB9B5B15B184199B7 /* IPCServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E2344731B274565234C22B /* IPCServer.swift */; };
 		5058D6E150CB69A9FEE65C86 /* VPNConfigParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5264A86DE17278729B668B /* VPNConfigParser.swift */; };
 		5FEB0F6F73E4789C9237BE72 /* SAMLServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AEF7EA664B6B37915D8F694 /* SAMLServerTests.swift */; };
 		6DB21C800803F506D10F6787 /* IPCMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8850139EE059E8A6EE74E3 /* IPCMessage.swift */; };
@@ -106,6 +107,7 @@
 		091FC811AE3462F8FCB637AC /* AWSVPNClientApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWSVPNClientApp.swift; sourceTree = "<group>"; };
 		0DBC87CCEE11C0984CB844E2 /* ConnectionStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionStateTests.swift; sourceTree = "<group>"; };
 		12B882FA9F9544A4FE3D1AFA /* VPNCore-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "VPNCore-Info.plist"; sourceTree = "<group>"; };
+		12E2344731B274565234C22B /* IPCServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPCServer.swift; sourceTree = "<group>"; };
 		36369211D4DE875CBE19D676 /* ConnectionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionState.swift; sourceTree = "<group>"; };
 		3816E3CBB3FA1E88A7322D11 /* AWSVPNClient-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "AWSVPNClient-Info.plist"; sourceTree = "<group>"; };
 		4E4B52314B2F87C8C92A0D34 /* VPNManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNManager.swift; sourceTree = "<group>"; };
@@ -228,6 +230,7 @@
 				7B7404AAB9D80CE4767CFD67 /* AppDelegate.swift */,
 				3816E3CBB3FA1E88A7322D11 /* AWSVPNClient-Info.plist */,
 				091FC811AE3462F8FCB637AC /* AWSVPNClientApp.swift */,
+				12E2344731B274565234C22B /* IPCServer.swift */,
 				7F3E059C62AD5DCA70A78EE1 /* StatusMenuView.swift */,
 			);
 			path = AWSVPNClient;
@@ -389,6 +392,7 @@
 			files = (
 				7797EAC6A17F1C088825FCF8 /* AWSVPNClientApp.swift in Sources */,
 				31B2B043FF402C42822DA568 /* AppDelegate.swift in Sources */,
+				4BCC6A3FB9B5B15B184199B7 /* IPCServer.swift in Sources */,
 				BC2ACA58AC93661567AFBD4A /* StatusMenuView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

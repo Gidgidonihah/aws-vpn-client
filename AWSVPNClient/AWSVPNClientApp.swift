@@ -6,6 +6,7 @@ import VPNCore
 struct AWSVPNClientApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @State private var vpnManager = VPNManager()
+    @State private var ipcServer: IPCServer?
 
     var body: some Scene {
         MenuBarExtra(
@@ -16,6 +17,7 @@ struct AWSVPNClientApp: App {
                 .environment(vpnManager)
                 .task {
                     appDelegate.vpnManager = vpnManager
+                    ipcServer = try? IPCServer(vpnManager: vpnManager)
                 }
         }
         .menuBarExtraStyle(.menu)
