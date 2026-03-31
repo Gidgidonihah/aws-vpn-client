@@ -38,10 +38,10 @@
 
 ### IPC & CLI
 
-- [ ] **IPC-01**: App starts a Unix domain socket server at `~/Library/Application Support/AWSVPNClient/daemon.sock` on launch; removes stale socket file on startup
+- [x] **IPC-01**: App starts a Unix domain socket server at `~/Library/Application Support/AWSVPNClient/daemon.sock` on launch; removes stale socket file on startup
 - [ ] **IPC-02**: `aws-connect <name>` sends connect command and exits
 - [ ] **IPC-03**: `aws-connect --disconnect <name>` sends disconnect command and exits
-- [ ] **IPC-04**: `aws-connect status` prints a table of all config names and their current state
+- [x] **IPC-04**: `aws-connect status` prints a table of all config names and their current state
 - [ ] **IPC-05**: CLI prints a clear error ("Start the AWSVPNClient menu bar app first") if socket is not found
 
 ### Cleanup & Docs
@@ -95,10 +95,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UI-03 | Phase 3 | Complete |
 | UI-04 | Phase 3 | Complete |
 | UI-05 | Phase 3 | Complete |
-| IPC-01 | Phase 4 | Pending |
+| IPC-01 | Phase 4 | Complete |
 | IPC-02 | Phase 4 | Pending |
 | IPC-03 | Phase 4 | Pending |
-| IPC-04 | Phase 4 | Pending |
+| IPC-04 | Phase 4 | Complete |
 | IPC-05 | Phase 4 | Pending |
 | CLEN-01 | Phase 5 | Pending |
 | CLEN-02 | Phase 5 | Pending |
