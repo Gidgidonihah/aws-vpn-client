@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: planning
-stopped_at: Completed 03-menu-ui-config-management-03-PLAN.md
-last_updated: "2026-03-25T23:11:19.028Z"
-last_activity: 2026-03-25
+status: executing
+stopped_at: Completed 04-ipc-cli-01-PLAN.md
+last_updated: "2026-03-31T19:56:40.329Z"
+last_activity: 2026-03-31
 progress:
   total_phases: 5
   completed_phases: 3
-  total_plans: 11
-  completed_plans: 11
+  total_plans: 13
+  completed_plans: 12
   percent: 0
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-17)
 
 **Core value:** VPN connections run silently in the background — connect once from the menu bar, walk away.
-**Current focus:** Phase 1 — Scaffold
+**Current focus:** Phase 04 — ipc-cli
 
 ## Current Position
 
-Phase: 4 of 5 (ipc & cli)
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-03-25
+Phase: 04 (ipc-cli) — EXECUTING
+Plan: 2 of 2
+Status: Ready to execute
+Last activity: 2026-03-31
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -63,6 +63,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 03-menu-ui-config-management P01 | 4 | 2 tasks | 3 files |
 | Phase 03-menu-ui-config-management P02 | 2 | 1 tasks | 1 files |
 | Phase 03-menu-ui-config-management P03 | 10 | 1 tasks | 1 files |
+| Phase 04-ipc-cli P01 | 25 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -98,6 +99,9 @@ Recent decisions affecting current work:
 - [Phase 03-menu-ui-config-management]: removeConfig uses FileManager.trashItem not NSWorkspace.recycle — synchronous, no AppKit dependency in VPNCore framework
 - [Phase 03-menu-ui-config-management]: StatusMenuView: NSApp.activate(ignoringOtherApps:true) must precede NSOpenPanel.runModal() for menu bar apps; Button actions use Task { try? await } for async VPNManager calls; View Logs creates log file before NSWorkspace.open
 - [Phase 03-menu-ui-config-management]: In .menuBarExtraStyle(.menu), capture @Environment ObservableObject before Task to prevent use-after-free on menu dismissal; annotate Task @MainActor
+- [Phase 04-ipc-cli]: IPCMessage.swift in VPNCore (not App target) — CLI imports VPNCore and avoids struct duplication
+- [Phase 04-ipc-cli]: IPCServer in App target (not VPNCore) — CLI never instantiates a server; keeps NWListener out of CLI surface
+- [Phase 04-ipc-cli]: Task { @MainActor [weak self] in } bridges GCD NWConnection callbacks to @MainActor VPNManager — mirrors spawnSudoOpenvpn pattern
 
 ### Pending Todos
 
@@ -110,6 +114,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-25T22:03:24.335Z
-Stopped at: Completed 03-menu-ui-config-management-03-PLAN.md
+Last session: 2026-03-31T19:56:40.326Z
+Stopped at: Completed 04-ipc-cli-01-PLAN.md
 Resume file: None
