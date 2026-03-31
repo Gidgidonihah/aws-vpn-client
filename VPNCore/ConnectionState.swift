@@ -25,4 +25,14 @@ public enum ConnectionState: Sendable {
     public var isActive: Bool {
         isConnected || isAuthenticating || isDisconnecting
     }
+
+    public var ipcLabel: String {
+        switch self {
+        case .disconnected:    return "disconnected"
+        case .authenticating:  return "authenticating"
+        case .connected:       return "connected"
+        case .disconnecting:   return "disconnecting"
+        case .failed(let msg): return "failed: \(msg)"
+        }
+    }
 }

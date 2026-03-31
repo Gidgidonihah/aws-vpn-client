@@ -26,4 +26,26 @@ final class ConnectionStateTests: XCTestCase {
         let state = ConnectionState.disconnecting
         XCTAssertFalse(state.isConnected)
     }
+
+    // MARK: - ipcLabel
+
+    func testIpcLabelDisconnected() {
+        XCTAssertEqual(ConnectionState.disconnected.ipcLabel, "disconnected")
+    }
+
+    func testIpcLabelAuthenticating() {
+        XCTAssertEqual(ConnectionState.authenticating.ipcLabel, "authenticating")
+    }
+
+    func testIpcLabelConnected() {
+        XCTAssertEqual(ConnectionState.connected.ipcLabel, "connected")
+    }
+
+    func testIpcLabelDisconnecting() {
+        XCTAssertEqual(ConnectionState.disconnecting.ipcLabel, "disconnecting")
+    }
+
+    func testIpcLabelFailed() {
+        XCTAssertEqual(ConnectionState.failed("timed out").ipcLabel, "failed: timed out")
+    }
 }
