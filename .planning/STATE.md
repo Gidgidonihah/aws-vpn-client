@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 04-ipc-cli-01-PLAN.md
-last_updated: "2026-03-31T19:56:40.329Z"
+status: verifying
+stopped_at: Completed 04-ipc-cli-02 Task 1; awaiting human-verify checkpoint
+last_updated: "2026-03-31T20:10:34.594Z"
 last_activity: 2026-03-31
 progress:
   total_phases: 5
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 13
-  completed_plans: 12
+  completed_plans: 13
   percent: 0
 ---
 
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-03-17)
 
 Phase: 04 (ipc-cli) — EXECUTING
 Plan: 2 of 2
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-03-31
 
 Progress: [░░░░░░░░░░] 0%
@@ -64,6 +64,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 03-menu-ui-config-management P02 | 2 | 1 tasks | 1 files |
 | Phase 03-menu-ui-config-management P03 | 10 | 1 tasks | 1 files |
 | Phase 04-ipc-cli P01 | 25 | 2 tasks | 7 files |
+| Phase 04-ipc-cli P02 | 8 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -102,6 +103,7 @@ Recent decisions affecting current work:
 - [Phase 04-ipc-cli]: IPCMessage.swift in VPNCore (not App target) — CLI imports VPNCore and avoids struct duplication
 - [Phase 04-ipc-cli]: IPCServer in App target (not VPNCore) — CLI never instantiates a server; keeps NWListener out of CLI surface
 - [Phase 04-ipc-cli]: Task { @MainActor [weak self] in } bridges GCD NWConnection callbacks to @MainActor VPNManager — mirrors spawnSudoOpenvpn pattern
+- [Phase 04-ipc-cli]: Copied sun_path to local var before strncpy to satisfy Swift 6 exclusive access rule
 
 ### Pending Todos
 
@@ -114,6 +116,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-31T19:56:40.326Z
-Stopped at: Completed 04-ipc-cli-01-PLAN.md
+Last session: 2026-03-31T20:10:34.592Z
+Stopped at: Completed 04-ipc-cli-02 Task 1; awaiting human-verify checkpoint
 Resume file: None

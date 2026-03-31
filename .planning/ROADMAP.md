@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Scaffold** - Xcode multi-target project with VPNCore framework, menu bar shell, and config persistence (completed 2026-03-19)
 - [x] **Phase 2: Connection Lifecycle** - SAML auth flow + openvpn subprocess management with all critical pitfall mitigations (completed 2026-03-20)
 - [x] **Phase 3: Menu UI + Config Management** - Full menu UI wired to live state, config add/remove, log viewer (completed 2026-03-25)
-- [ ] **Phase 4: IPC & CLI** - Unix socket server in app, companion aws-connect CLI with connect/disconnect/status
+- [x] **Phase 4: IPC & CLI** - Unix socket server in app, companion aws-connect CLI with connect/disconnect/status (completed 2026-03-31)
 - [ ] **Phase 5: Cleanup & Docs** - Delete Rust legacy, update README with Swift setup instructions
 
 ## Phase Details
@@ -83,7 +83,7 @@ Plans:
 **Plans**: 2 plans
 Plans:
 - [x] 04-01-PLAN.md — IPC message types (VPNCore) + IPCServer (App target) + app integration + Wave 0 tests
-- [ ] 04-02-PLAN.md — aws-connect CLI implementation + end-to-end IPC smoke test
+- [x] 04-02-PLAN.md — aws-connect CLI implementation + end-to-end IPC smoke test
 
 ### Phase 5: Cleanup & Docs
 **Goal**: Legacy Rust code is gone, the README reflects the Swift implementation, and the project is self-contained and documented for future use
@@ -104,5 +104,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 1. Scaffold | 3/3 | Complete   | 2026-03-20 |
 | 2. Connection Lifecycle | 5/5 | Complete   | 2026-03-20 |
 | 3. Menu UI + Config Management | 3/3 | Complete   | 2026-03-25 |
-| 4. IPC & CLI | 1/2 | In Progress|  |
+| 4. IPC & CLI | 2/2 | Complete   | 2026-03-31 |
 | 5. Cleanup & Docs | 0/TBD | Not started | - |
