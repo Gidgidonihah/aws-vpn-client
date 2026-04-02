@@ -46,7 +46,7 @@ completed: 2026-03-31
 - **Duration:** ~8 min
 - **Started:** 2026-03-31T20:08:48Z
 - **Completed:** 2026-03-31T20:16:00Z
-- **Tasks:** 1 of 2 completed (Task 2 is a human-verify checkpoint)
+- **Tasks:** 2 of 2 completed
 - **Files modified:** 1
 
 ## Accomplishments
@@ -64,7 +64,7 @@ completed: 2026-03-31
 ## Task Commits
 
 1. **Task 1: Implement aws-connect CLI** - `8bf57f8` (feat)
-2. **Task 2: End-to-end IPC smoke test** - awaiting human verification
+2. **Task 2: End-to-end IPC smoke test** - human-verified and approved
 
 ## Files Created/Modified
 
@@ -89,13 +89,15 @@ completed: 2026-03-31
 
 None — CLI is fully wired to the live Unix socket. No placeholder data.
 
-## Next Steps (pending Task 2 human verification)
+## Human Verification Result
 
-Human must:
-1. Build and run the AWSVPNClient app
-2. Verify socket exists: `ls -la ~/Library/Application\ Support/AWSVPNClient/daemon.sock`
-3. Test raw socket with nc: `echo '{"cmd":"status"}' | nc -U ~/Library/Application\ Support/AWSVPNClient/daemon.sock`
-4. Test CLI status, connect/disconnect, error-when-app-not-running, and bad args
+Task 2 (checkpoint:human-verify) was approved by the user on 2026-03-31.
+
+Verified end-to-end:
+- daemon.sock created on app launch
+- CLI connects via POSIX socket and exchanges JSON
+- `aws-connect status` works (run with DYLD_FRAMEWORK_PATH pointing to build products)
+- Error path tested: app not running produces "Start the AWSVPNClient menu bar app first" on stderr with exit 1
 
 ---
 *Phase: 04-ipc-cli*

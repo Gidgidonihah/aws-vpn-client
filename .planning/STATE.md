@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: Completed 04-ipc-cli-02 Task 1; awaiting human-verify checkpoint
-last_updated: "2026-03-31T20:10:34.594Z"
+stopped_at: Completed 04-ipc-cli-02 (Task 2 human-verify approved); Phase 04 complete
+last_updated: "2026-03-31T23:37:03.667Z"
 last_activity: 2026-03-31
 progress:
   total_phases: 5
@@ -104,6 +104,7 @@ Recent decisions affecting current work:
 - [Phase 04-ipc-cli]: IPCServer in App target (not VPNCore) — CLI never instantiates a server; keeps NWListener out of CLI surface
 - [Phase 04-ipc-cli]: Task { @MainActor [weak self] in } bridges GCD NWConnection callbacks to @MainActor VPNManager — mirrors spawnSudoOpenvpn pattern
 - [Phase 04-ipc-cli]: Copied sun_path to local var before strncpy to satisfy Swift 6 exclusive access rule
+- [Phase 04-ipc-cli]: End-to-end IPC verified: daemon.sock created on launch, CLI POSIX socket connection works, aws-connect status output confirmed, app-not-running error path confirmed
 
 ### Pending Todos
 
@@ -116,6 +117,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-31T20:10:34.592Z
-Stopped at: Completed 04-ipc-cli-02 Task 1; awaiting human-verify checkpoint
+Last session: 2026-03-31T23:36:59.980Z
+Stopped at: Completed 04-ipc-cli-02 (Task 2 human-verify approved); Phase 04 complete
 Resume file: None
