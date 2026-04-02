@@ -33,8 +33,8 @@ VPN connections run silently in the background — connect once from the menu ba
 - [ ] Config management: add via NSOpenPanel, remove via menu, stored in `~/Library/Application Support/AWSVPNClient/configs/`
 - [ ] Per-connection log files in `~/Library/Logs/AWSVPNClient/<name>.log`, viewable from menu (opens Console.app)
 - [ ] Menu bar icon reflects overall state: `lock.fill` (any connected) / `lock.open` (all disconnected)
-- [ ] Companion `aws-connect` CLI: `connect`, `disconnect`, `status` commands via Unix domain socket IPC
-- [ ] CLI prints helpful error if app is not running
+- [x] Companion `aws-connect` CLI: `connect`, `disconnect`, `status` commands via Unix domain socket IPC — Validated in Phase 4: ipc-cli
+- [x] CLI prints helpful error if app is not running — Validated in Phase 4: ipc-cli
 
 ### Out of Scope
 
@@ -68,7 +68,7 @@ Existing authentication logic to preserve exactly:
 |----------|-----------|---------|
 | Swift full rewrite (no Rust) | Native macOS APIs, no terminal required, proper background process lifecycle | — Pending |
 | SwiftUI MenuBarExtra | Native menu bar integration, macOS 14+ only | — Pending |
-| Unix domain socket for IPC | Simple, reliable, no network stack needed for local CLI→app communication | — Pending |
+| Unix domain socket for IPC | Simple, reliable, no network stack needed for local CLI→app communication | NWListener on app side, POSIX Darwin.socket on CLI side — Phase 4 complete |
 | NWListener for SAML server | Network.framework is the modern macOS API; replaces axum/tokio | — Pending |
 | @Observable VPNManager | SwiftUI-native state management pattern (Swift 5.9+) | — Pending |
 | Core framework target | Shared by App + CLI — no code duplication between targets | — Pending |
@@ -76,4 +76,4 @@ Existing authentication logic to preserve exactly:
 | Legacy Rust left in place initially | Delete after Swift version verified working | — Pending |
 
 ---
-*Last updated: 2026-03-17 after research (macOS min bumped 13→14)*
+*Last updated: 2026-04-02 — Phase 4 complete (IPC & CLI layer built and verified)*
