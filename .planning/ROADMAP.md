@@ -92,7 +92,9 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. Rust workspace directories (aws-vpn-core/, aws-vpn-cli/, Cargo.toml) and legacy shell/Go files no longer exist in the repo
   2. README covers the complete setup: sudoers NOPASSWD entry, building the app, installing the aws-connect CLI binary, and adding configs
-**Plans**: TBD
+**Plans**: 1 plans
+Plans:
+- [ ] 05-01-PLAN.md — Delete legacy Rust/Go/shell files and rewrite README with Swift setup guide
 
 ## Progress
 
@@ -105,4 +107,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 2. Connection Lifecycle | 5/5 | Complete   | 2026-03-20 |
 | 3. Menu UI + Config Management | 3/3 | Complete   | 2026-03-25 |
 | 4. IPC & CLI | 2/2 | Complete   | 2026-03-31 |
-| 5. Cleanup & Docs | 0/TBD | Not started | - |
+| 5. Cleanup & Docs | 0/1 | Not started | - |
