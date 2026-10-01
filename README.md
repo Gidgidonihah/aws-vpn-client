@@ -6,10 +6,17 @@ An alternate MacOS VPN Client for AWS.
 
 Before using this client, there are a couple steps you need to take first:
 
-1. [Install](#installation) go, openssl, and a patched version of OpenVPN
+1. [Install](#installation) go, openssl, and the official **AWS VPN Client**
 2. Build the go server (`go build`)
 3. Place your AWS VPN configuration in `./configs` by name that will be passed to the
    script. For example, `./configs/prod.conf`.
+
+> [!IMPORTANT]
+> This client **requires the official AWS VPN Client to be installed**. It does not
+> ship or build its own OpenVPN; instead it drives the patched OpenVPN (`acvc-openvpn`)
+> bundled inside the AWS VPN Client app. AWS keeps that binary in sync with their
+> proprietary SAML control-channel protocol, so we don't have to maintain a patch.
+> See [Installation](#installation).
 
 ## Usage
 
@@ -24,47 +31,55 @@ aws-connect.sh staging
 You may also ensure that you have an active aws sso session by passing the `-a` flag.
 Helpful in case you, like me, always forget to do this before connecting to k8s.
 
-The script assumes that `openvpn` available on your path is a patched version of
-openvpn. If not, you can pass the path to the executable via the `-x` flag.
+By default the script uses the patched OpenVPN bundled with the official AWS VPN Client
+(`acvc-openvpn`). If it isn't installed, the script will tell you and exit. If you have a
+patched OpenVPN somewhere else, pass its path via the `-x` flag to override.
 
 > [!TIP] You can *also* use this client on Linux, however it is not tested, and you need
-> to build your own openvpn-aws client. Or you can pull the `acvc-openvpn` binary out of
-> the main AWS client directly.
+> to build your own openvpn-aws client, or pull the `acvc-openvpn` binary out of the AWS
+> client and point at it with `-x`.
 
 ## Caution
 
-This project is based on a proof of concept and requires a patched version of OpenVPN.
+This project is based on a proof of concept and relies on a patched version of OpenVPN
+that understands AWS's proprietary SAML auth.
 
-Currently the **latest supported version is 2.6.19**. Patches for newer versions could be
-created easily enough. But I don't want to deal with the maintenance headache of that,
-so if you want that, clone the repo, create the patch, modify the brew formula and build
-it yourself.
+Rather than maintain that patch ourselves, this client uses the `acvc-openvpn` binary
+shipped inside the official AWS VPN Client. AWS keeps it current with their protocol.
 
-Obviously, there are downsides to this. Proceed with an appropriate level of caution.
+> [!WARNING]
+> Do **not** substitute a stock OpenVPN or a self-built patch on a newer OpenVPN release.
+> The community `openvpn-v2.5.1-aws.patch` applied to OpenVPN 2.6.13+ mis-parses the
+> `AUTH_FAILED`/`CRV1` SAML control message and aborts with a bogus
+> `fatal buffer size error, size=<huge>` *before* the login URL is returned. The AWS
+> client pins OpenVPN **2.6.12**, which is why driving its binary works.
 
 ## Installation
 
-Using this client requires a patched version of OpenVPN. It is up to you to ensure that
-exists. Conveniently, this also comes with a Homebrew formula to build a patched
-version.
-
-> [!CAUTION]: This *will* conflict with an already-installed version of OpenVPN. Proceed at
-> your own risk!
+Install the official **AWS VPN Client** — this client drives the patched OpenVPN it
+bundles:
 
 ```sh
-brew tap awsvpn/aws-vpn-client /path/to/this/repo
-brew install awsvpn/aws-vpn-client/openvpn-aws
+brew install --cask aws-vpn-client
+# or download from https://aws.amazon.com/vpn/client-vpn-download/
 ```
 
-By default, that will link `openvpn` to the built `openvpn-aws` executable. You can
-unlink it, then link a non-patched version for general usage. You will then need to pass
-the path to the patched version into the client script via the `-x` flag.
+The script looks for the bundled binary at:
 
-You will also need `go` and  `openssl` installed. Typically this is done by running:
+```
+/Applications/AWS VPN Client/AWS VPN Client.app/Contents/Resources/openvpn/acvc-openvpn
+```
+
+You will also need `go` and `openssl` installed. Typically this is done by running:
 
 ```sh
 brew install go openssl@3
 ```
+
+> [!NOTE]
+> A Homebrew formula (`Formula/openvpn-aws.rb`) that builds a patched OpenVPN 2.6.19 is
+> kept in this repo for reference, but it is **not** used by default and currently
+> triggers the `fatal buffer size error` described above. Prefer the AWS VPN Client.
 
 ## Motivation
 

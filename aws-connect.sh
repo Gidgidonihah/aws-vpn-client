@@ -67,8 +67,31 @@ fi
 echo "The VPN must be run with administrator privileges."
 sudo -v
 
-# Ensure we have an executable. Assume openvpn is patched if not supplied.
-OVPN_BIN=${OVPN_BIN:="openvpn"}
+# Resolve the OpenVPN executable.
+#
+# This client REQUIRES the official AWS VPN Client to be installed and uses the
+# patched OpenVPN it ships (acvc-openvpn). That binary tracks AWS's proprietary
+# SAML control-channel protocol and is pinned to a known-good version (2.6.12).
+# Self-built patches (e.g. openvpn-aws 2.6.19 + the 2.5.1 patch) mis-parse the
+# AUTH_FAILED/CRV1 control message on newer OpenVPN and die with a bogus
+# "fatal buffer size error" before the SAML URL is ever returned.
+#
+# An explicit -x overrides this for anyone who knows what they're doing.
+ACVC_OPENVPN="/Applications/AWS VPN Client/AWS VPN Client.app/Contents/Resources/openvpn/acvc-openvpn"
+if [[ -z "${OVPN_BIN:-}" ]]; then
+  if [[ ! -x "$ACVC_OPENVPN" ]]; then
+    echo "Error: the AWS VPN Client is required but was not found at:" >&2
+    echo "  $ACVC_OPENVPN" >&2
+    echo >&2
+    echo "Install it (this client uses the patched OpenVPN it bundles):" >&2
+    echo "  brew install --cask aws-vpn-client" >&2
+    echo "  # or download from https://aws.amazon.com/vpn/client-vpn-download/" >&2
+    echo >&2
+    echo "Already have a patched OpenVPN elsewhere? Point at it with -x." >&2
+    exit 1
+  fi
+  OVPN_BIN="$ACVC_OPENVPN"
+fi
 
 # Get the VPN hostname/port/protocol
 VPN_HOST=$(cat $OVPN_CONF | grep 'remote ' | cut -d ' ' -f2)
@@ -150,12 +173,20 @@ RAND=$(openssl rand -hex 12)
 # Resolve manually hostname to IP, as we have to keep persistent ip address
 SRV=$(dig a +short "${RAND}.${VPN_HOST}"|head -n1)
 
-# Get the login URL
-echo "Getting SAML redirect URL from the AUTH_FAILED response (host: ${SRV}:${PORT})"
-OVPN_OUT=$($OVPN_BIN --config "${TMP_CONF}" --verb 3 \
+# Get the login URL. Capture the full output first so a failure to find the
+# AUTH_FAILED,CRV1 line surfaces openvpn's real error instead of silently
+# tripping `set -e` and jumping straight to cleanup.
+echo "Getting SAML redirect URL from the AUTH_FAILED response (host: ${SRV}:${PORT}) using ${OVPN_BIN}"
+OVPN_RAW=$("$OVPN_BIN" --config "${TMP_CONF}" --verb 3 \
      --proto "$PROTOCOL" --remote "${SRV}" "${PORT}" \
-     --auth-user-pass <( printf "%s\n%s\n" "N/A" "ACS::35001" ) \
-    2>&1 | grep AUTH_FAILED,CRV1)
+     --auth-user-pass <( printf "%s\n%s\n" "N/A" "ACS::35001" ) 2>&1 || true)
+OVPN_OUT=$(echo "$OVPN_RAW" | grep AUTH_FAILED,CRV1 || true)
+if [[ -z "$OVPN_OUT" ]]; then
+  echo "Error: openvpn did not return a SAML challenge (AUTH_FAILED,CRV1)." >&2
+  echo "Last lines of openvpn output:" >&2
+  echo "$OVPN_RAW" | tail -n 8 >&2
+  exit 1
+fi
 
 # Open the login URL in a browser
 open_url $(echo "$OVPN_OUT" | grep -Eo 'https://.+')
@@ -175,7 +206,7 @@ aws_login_if_required
 VPN_SID=$(echo "$OVPN_OUT" | awk -F : '{print $7}')
 
 echo "Running OpenVPN with sudo. Enter password if requested"
-sudo bash -c "$OVPN_BIN --config "${TMP_CONF}" \
+sudo bash -c "\"$OVPN_BIN\" --config "${TMP_CONF}" \
     --verb 3 --auth-nocache --inactive 3600 \
     --proto "$PROTOCOL" --remote $SRV $PORT \
     --script-security 2 \
